@@ -1,5 +1,6 @@
 package com.shashank.moviedb.di;
 
+import com.shashank.moviedb.data.remote.MovieApi;
 import com.shashank.moviedb.util.Constants;
 
 import javax.inject.Singleton;
@@ -19,5 +20,12 @@ public class AppModule {
                 .baseUrl(Constants.BASE_URL)
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
+    }
+
+
+    @Singleton
+    @Provides
+    public static MovieApi provideMovieApi(Retrofit retrofit) {
+        return retrofit.create(MovieApi.class);
     }
 }
