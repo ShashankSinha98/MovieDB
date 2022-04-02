@@ -1,5 +1,6 @@
 package com.shashank.moviedb.util;
 
+import com.shashank.moviedb.BuildConfig;
 import com.shashank.moviedb.model.MovieResponse;
 
 import java.util.HashMap;
@@ -8,7 +9,7 @@ import java.util.Map;
 public abstract class Constants {
 
     public static final String BASE_URL = "https://api.themoviedb.org";
-    private static final String API_KEY = "244bbf5c3bd2c028cf95a65ad1874979";
+    private static final String API_KEY = BuildConfig.API_KEY;
     public static final String LANGUAGE = "en-US";
     public static final String REGION = "IN";
 
