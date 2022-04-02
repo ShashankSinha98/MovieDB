@@ -45,8 +45,13 @@ public class Resource<T> {
         return message;
     }
 
-    enum Status {
-        SUCCESS,ERROR, LOADING
+    @Override
+    public String
+    toString() {
+        return "Resource{" +
+                "status=" + status +
+                ", data=" + data +
+                ", message='" + message + '\'' +
+                '}';
     }
-
 }

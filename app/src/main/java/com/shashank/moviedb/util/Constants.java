@@ -8,10 +8,12 @@ import java.util.Map;
 
 public abstract class Constants {
 
-    public static final String BASE_URL = "https://api.themoviedb.org";
+    public static final String BASE_URL = "https://api.themoviedb.org/3";
     private static final String API_KEY = BuildConfig.API_KEY;
     public static final String LANGUAGE = "en-US";
     public static final String REGION = "IN";
+    public static final Long READ_TIMEOUT = 2000L;
+
 
 
     public static class QueryString {
@@ -26,6 +28,12 @@ public abstract class Constants {
               put(QueryString.LANGUAGE, LANGUAGE);
               put(QueryString.REGION, REGION);}
         };
+
+        public static final Map<String, String> PARAMS_TRENDING_MOVIE_API =  new HashMap() {
+            { put(QueryString.API_KEY, API_KEY); }
+        };
     }
+
+    public static final String TRENDING_TIME_WINDOW = "week"; // week or day
 
 }
