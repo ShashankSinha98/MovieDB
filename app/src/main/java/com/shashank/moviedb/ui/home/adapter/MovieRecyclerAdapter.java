@@ -68,12 +68,13 @@ public class MovieRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.View
 
     @Override
     public int getItemViewType(int position) {
-        if(!mMovies.isEmpty()) {
+        if(!mMovies.isEmpty() && !mMovies.get(position).getTitle().equals("EXHAUSTED")) {
             return MOVIE_TYPE;
-        } else {
-            // movie list is empty
+        } else if(!mMovies.isEmpty() && mMovies.get(position).getTitle().equals("EXHAUSTED")){
             return EXHAUSTED_TYPE;
         }
+
+        return MOVIE_TYPE;
     }
 
 

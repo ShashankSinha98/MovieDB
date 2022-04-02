@@ -18,6 +18,7 @@ import com.shashank.moviedb.data.remote.MovieRepository;
 import com.shashank.moviedb.model.MovieResponse;
 import com.shashank.moviedb.model.MovieResult;
 import com.shashank.moviedb.ui.home.adapter.MovieRecyclerAdapter;
+import com.shashank.moviedb.util.Constants;
 
 import java.util.List;
 
@@ -50,10 +51,17 @@ public class HomeFragment extends DaggerFragment {
             public void onResponse(Resource resource) {
                 if(resource.getStatus() == Status.SUCCESS) {
                     List<MovieResult> movies = ((MovieResponse)resource.getData()).getResults();
+                    movies.add(getExhaustedEntry());
                     movieRecyclerAdapter.setMovies(movies);
                 }
             }
         });
+    }
+
+    private MovieResult getExhaustedEntry() {
+        MovieResult exhaustedDummyMovie = new MovieResult();
+        exhaustedDummyMovie.setTitle(Constants.CONST_EXHAUSTED);
+        return exhaustedDummyMovie;
     }
 
     private void initUI() {
