@@ -3,6 +3,7 @@ package com.shashank.moviedb.di;
 import android.app.Application;
 
 import com.shashank.moviedb.BaseApplication;
+import com.shashank.moviedb.ui.home.viewholder.MovieViewHolder;
 
 import javax.inject.Singleton;
 

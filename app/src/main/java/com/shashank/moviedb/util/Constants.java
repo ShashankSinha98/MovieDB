@@ -15,6 +15,8 @@ public abstract class Constants {
     public static final Long READ_TIMEOUT = 2000L;
 
     public static final String INVALID_MOVIE_ID_ERROR_MSG = "Invalid Movie ID";
+    public static final String BASE_IMAGE_URL_API = "https://image.tmdb.org/t/p/w185_and_h278_bestv2/";
+    public static final String BASE_IMAGE_URL_w500_API = "https://image.tmdb.org/t/p/w500/";
 
 
 

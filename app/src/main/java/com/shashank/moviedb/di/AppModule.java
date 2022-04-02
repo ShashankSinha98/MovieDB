@@ -1,5 +1,11 @@
 package com.shashank.moviedb.di;
 
+import android.app.Application;
+
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.RequestManager;
+import com.bumptech.glide.request.RequestOptions;
+import com.shashank.moviedb.R;
 import com.shashank.moviedb.data.remote.MovieApi;
 import com.shashank.moviedb.data.remote.MovieRepository;
 import com.shashank.moviedb.data.remote.MovieRepositoryImpl;
@@ -50,4 +56,19 @@ public class AppModule {
     public static MovieRepository provideMovieRepository(MovieApi movieApi) {
         return new MovieRepositoryImpl(movieApi);
     }
+
+    // TODO: set placeholder later
+    @Singleton
+    @Provides
+    public static RequestOptions provideRequestOptions() {
+        return RequestOptions.placeholderOf(R.drawable.small_placeholder)
+                .error(R.drawable.small_placeholder);
+    }
+
+    @Singleton
+    @Provides
+    public static RequestManager provideGlideInstance(Application application, RequestOptions requestOptions) {
+        return Glide.with(application).setDefaultRequestOptions(requestOptions);
+    }
+
 }

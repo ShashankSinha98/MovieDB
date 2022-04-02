@@ -35,6 +35,7 @@ android {
 }
 
 dependencies {
+    implementation 'androidx.swiperefreshlayout:swiperefreshlayout:1.1.0'
     def retrofit_version = '2.9.0'
     def dagger_version = '2.22'
     def rxjava_version = '2.1.1'
@@ -42,6 +43,8 @@ dependencies {
     def rxandroid_version = '2.0.1'
     def material_version = "1.0.0"
     def nav_version = '2.2.2'
+    def glideVersion = '4.8.0'
+    def androidxVersion = '1.0.0'
 
     implementation 'androidx.appcompat:appcompat:1.4.1'
     implementation 'com.google.android.material:material:1.5.0'
@@ -59,6 +62,8 @@ dependencies {
     implementation "androidx.navigation:navigation-fragment-ktx:$nav_version"
     implementation "androidx.navigation:navigation-ui-ktx:$nav_version"
     implementation "androidx.navigation:navigation-runtime:$nav_version"
+
+    implementation "androidx.recyclerview:recyclerview:$androidxVersion"
 
     //Retrofit for Networking
     implementation "com.squareup.retrofit2:retrofit:$retrofit_version"
@@ -80,4 +85,8 @@ dependencies {
 
     // Rx-Retrofit Call Adapter
     implementation "com.squareup.retrofit2:adapter-rxjava2:$rxcalladapter_version" // Retrofit call adapter
+
+    // Glide
+    implementation "com.github.bumptech.glide:glide:$glideVersion"
+    annotationProcessor "com.github.bumptech.glide:compiler:$glideVersion"
 }
