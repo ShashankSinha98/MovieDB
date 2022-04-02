@@ -1,5 +1,6 @@
 package com.shashank.moviedb.model;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import java.util.ArrayList;
@@ -7,21 +8,22 @@ import java.util.List;
 
 public class MovieResponse {
 
-    private int page;
+    @NonNull private Integer page;
     @Nullable private List<MovieResult> results;
 
     public MovieResponse() { }
 
-    public MovieResponse(int page, @Nullable List<MovieResult> results) {
+    public MovieResponse(@NonNull Integer page, @Nullable List<MovieResult> results) {
         this.page = page;
         this.results = results;
     }
 
-    public int getPage() {
+    @NonNull
+    public Integer getPage() {
         return page;
     }
 
-    public void setPage(int page) {
+    public void setPage(@NonNull Integer page) {
         this.page = page;
     }
 

@@ -3,22 +3,27 @@ package com.shashank.moviedb.model;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import com.google.gson.annotations.SerializedName;
+
 public class MovieResult {
 
     @NonNull private Long id;
-    @NonNull private String original_title, title;
-    @Nullable private String  poster_path, backdrop_path;
-    @NonNull private Double vote_average;
+    @NonNull @SerializedName("original_title") private String originalTitle;
+    @NonNull private String title;
+    @Nullable @SerializedName("poster_path") private String posterPath;
+    @Nullable @SerializedName("backdrop_path") private String backdropPath;
+    @Nullable @SerializedName("vote_average") private Double voteAverage;
 
     public MovieResult() { }
 
-    public MovieResult(@NonNull Long id, @NonNull String original_title, @NonNull String title, @Nullable String poster_path, @Nullable String backdrop_path, @NonNull Double vote_average) {
+    public MovieResult(@NonNull Long id, @NonNull String originalTitle, @NonNull String title, @Nullable String posterPath,
+                       @Nullable String backdropPath, @Nullable Double voteAverage) {
         this.id = id;
-        this.original_title = original_title;
+        this.originalTitle = originalTitle;
         this.title = title;
-        this.poster_path = poster_path;
-        this.backdrop_path = backdrop_path;
-        this.vote_average = vote_average;
+        this.posterPath = posterPath;
+        this.backdropPath = backdropPath;
+        this.voteAverage = voteAverage;
     }
 
     @NonNull
@@ -31,12 +36,12 @@ public class MovieResult {
     }
 
     @NonNull
-    public String getOriginal_title() {
-        return original_title;
+    public String getOriginalTitle() {
+        return originalTitle;
     }
 
-    public void setOriginal_title(@NonNull String original_title) {
-        this.original_title = original_title;
+    public void setOriginalTitle(@NonNull String originalTitle) {
+        this.originalTitle = originalTitle;
     }
 
     @NonNull
@@ -49,41 +54,41 @@ public class MovieResult {
     }
 
     @Nullable
-    public String getPoster_path() {
-        return poster_path;
+    public String getPosterPath() {
+        return posterPath;
     }
 
-    public void setPoster_path(@Nullable String poster_path) {
-        this.poster_path = poster_path;
+    public void setPosterPath(@Nullable String posterPath) {
+        this.posterPath = posterPath;
     }
 
     @Nullable
-    public String getBackdrop_path() {
-        return backdrop_path;
+    public String getBackdropPath() {
+        return backdropPath;
     }
 
-    public void setBackdrop_path(@Nullable String backdrop_path) {
-        this.backdrop_path = backdrop_path;
+    public void setBackdropPath(@Nullable String backdropPath) {
+        this.backdropPath = backdropPath;
     }
 
-    @NonNull
-    public Double getVote_average() {
-        return vote_average;
+    @Nullable
+    public Double getVoteAverage() {
+        return voteAverage;
     }
 
-    public void setVote_average(@NonNull Double vote_average) {
-        this.vote_average = vote_average;
+    public void setVoteAverage(@Nullable Double voteAverage) {
+        this.voteAverage = voteAverage;
     }
 
     @Override
     public String toString() {
         return "MovieResult{" +
                 "id=" + id +
-                ", original_title='" + original_title + '\'' +
-                ", poster_path='" + poster_path + '\'' +
-                ", backdrop_path='" + backdrop_path + '\'' +
+                ", original_title='" + originalTitle + '\'' +
+                ", poster_path='" + posterPath + '\'' +
+                ", backdrop_path='" + backdropPath + '\'' +
                 ", title='" + title + '\'' +
-                ", vote_average=" + vote_average +
+                ", vote_average=" + voteAverage +
                 '}';
     }
 }

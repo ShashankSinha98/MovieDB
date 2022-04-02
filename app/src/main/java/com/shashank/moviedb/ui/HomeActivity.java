@@ -27,10 +27,10 @@ public class HomeActivity extends DaggerAppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        movieRepository.fetchTrendingMovies(new ResourceCallback() {
+        movieRepository.fetchMovieDetail(634649L, new ResourceCallback() {
             @Override
             public void onResponse(Resource resource) {
-                Log.d(TAG, "xlr8: Resource: "+resource);
+                Log.d(TAG, "xlr8: resource: "+resource);
             }
         });
 

@@ -1,10 +1,7 @@
 package com.shashank.moviedb.data.remote;
 
 
-/* Note: Currently we will make all network request on main thread
-*  @TODO: Add suspend when using coroutines
-* */
-
+import com.shashank.moviedb.model.MovieDetail;
 import com.shashank.moviedb.model.MovieResponse;
 
 import java.util.Map;
@@ -26,4 +23,8 @@ public interface MovieApi {
     @GET("trending/movie/{time_window}")
     Observable<MovieResponse> fetchTrendingMovie(@Path("time_window") String time,
                                                  @QueryMap Map<String, String> params);
+
+    @GET("movie/{movie_id}")
+    Observable<MovieDetail> fetchMovieDetail(@Path("movie_id") Long movieId,
+                                             @QueryMap Map<String, String> params);
 }

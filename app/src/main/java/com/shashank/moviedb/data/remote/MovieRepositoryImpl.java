@@ -8,6 +8,7 @@ import androidx.annotation.NonNull;
 
 import com.shashank.moviedb.data.ResourceCallback;
 import com.shashank.moviedb.data.Resource;
+import com.shashank.moviedb.model.MovieDetail;
 import com.shashank.moviedb.model.MovieResponse;
 import com.shashank.moviedb.model.MovieResult;
 import com.shashank.moviedb.util.Constants;
@@ -66,6 +67,7 @@ public class MovieRepositoryImpl implements MovieRepository {
                 });
     }
 
+
     @Override
     public void fetchTrendingMovies(ResourceCallback resourceCallback) {
 
@@ -93,6 +95,43 @@ public class MovieRepositoryImpl implements MovieRepository {
                     @Override
                     public void onComplete() {
                         Log.d(TAG, "fetchTrendingMovies - onComplete");
+                    }
+                });
+    }
+
+
+    @Override
+    public void fetchMovieDetail(Long movieId, ResourceCallback resourceCallback) {
+
+        if(movieId==null || movieId<=0L) {
+            resourceCallback.onResponse(Resource.error(Constants.INVALID_MOVIE_ID_ERROR_MSG,null));
+            return;
+        }
+
+        movieApi.fetchMovieDetail(movieId, QueryParams.PARAMS_MOVIE_DETAIL_API)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Observer<MovieDetail>() {
+                    @Override
+                    public void onSubscribe(@NonNull Disposable d) {
+                        Log.d(TAG,"fetchMovieDetail - onSubscribe");
+                    }
+
+                    @Override
+                    public void onNext(@NonNull MovieDetail movieDetail) {
+                        Log.d(TAG,"fetchMovieDetail - onNext: movieDetail: "+movieDetail);
+                        resourceCallback.onResponse(Resource.success(movieDetail));
+                    }
+
+                    @Override
+                    public void onError(@NonNull Throwable e) {
+                        Log.d(TAG, "fetchMovieDetail - onError: e: "+e.getMessage());
+                        resourceCallback.onResponse(Resource.error(e.getMessage(), null));
+                    }
+
+                    @Override
+                    public void onComplete() {
+                        Log.d(TAG, "fetchMovieDetail - onComplete");
                     }
                 });
     }

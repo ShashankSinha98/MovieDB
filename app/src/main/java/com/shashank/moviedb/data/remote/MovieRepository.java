@@ -11,4 +11,6 @@ public interface MovieRepository {
     void fetchNowPlayingMovies(ResourceCallback resourceCallback);
 
     void fetchTrendingMovies(ResourceCallback resourceCallback);
+
+    void fetchMovieDetail(Long movieId, ResourceCallback resourceCallback);
 }
