@@ -9,6 +9,8 @@ import com.shashank.moviedb.model.MovieResponse;
 
 import java.util.Map;
 
+import io.reactivex.Flowable;
+import io.reactivex.Observable;
 import retrofit2.Call;
 import retrofit2.Response;
 import retrofit2.http.GET;
@@ -17,5 +19,5 @@ import retrofit2.http.QueryMap;
 public interface MovieApi {
 
     @GET("/3/movie/now_playing")
-    Call<MovieResponse> fetchNowPlayingMovie(@QueryMap Map<String, String> params);
+    Observable<MovieResponse> fetchNowPlayingMovie(@QueryMap Map<String, String> params);
 }

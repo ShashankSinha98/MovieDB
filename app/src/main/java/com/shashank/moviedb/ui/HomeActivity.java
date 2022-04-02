@@ -7,6 +7,8 @@ import android.util.Log;
 
 import com.shashank.moviedb.R;
 import com.shashank.moviedb.data.remote.MovieApi;
+import com.shashank.moviedb.data.remote.MovieRepository;
+import com.shashank.moviedb.data.remote.MovieRepositoryImpl;
 import com.shashank.moviedb.model.MovieResponse;
 import com.shashank.moviedb.util.Constants;
 
@@ -33,24 +35,8 @@ public class HomeActivity extends DaggerAppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        Map<String, String> params = new HashMap<>();
-        params.put(Constants.QueryString.API_KEY, Constants.API_KEY);
-        params.put(Constants.QueryString.LANGUAGE, Constants.LANGUAGE);
-        params.put(Constants.QueryString.REGION, Constants.REGION);
-
-        movieApi.fetchNowPlayingMovie(params).enqueue(new Callback<MovieResponse>() {
-            @Override
-            public void onResponse(Call<MovieResponse> call, Response<MovieResponse> response) {
-                Log.d(TAG, "xlr8 : response: "+response);
-                Log.d(TAG, "xlr8 : body: "+response.body());
-
-            }
-
-            @Override
-            public void onFailure(Call<MovieResponse> call, Throwable t) {
-                Log.d(TAG, "xlr8 : t: "+t);
-            }
-        });
+        MovieRepository repository = new MovieRepositoryImpl(movieApi);
+        repository.fetchNowPlayingMovies();
 
 
     }

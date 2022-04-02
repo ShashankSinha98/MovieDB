@@ -1,15 +1,18 @@
 package com.shashank.moviedb.model;
 
+import androidx.annotation.Nullable;
+
+import java.util.ArrayList;
 import java.util.List;
 
 public class MovieResponse {
 
     private int page;
-    private List<MovieResult> results;
+    @Nullable private List<MovieResult> results;
 
     public MovieResponse() { }
 
-    public MovieResponse(int page, List<MovieResult> results) {
+    public MovieResponse(int page, @Nullable List<MovieResult> results) {
         this.page = page;
         this.results = results;
     }
@@ -22,11 +25,12 @@ public class MovieResponse {
         this.page = page;
     }
 
+    @Nullable
     public List<MovieResult> getResults() {
         return results;
     }
 
-    public void setResults(List<MovieResult> results) {
+    public void setResults(@Nullable List<MovieResult> results) {
         this.results = results;
     }
 
