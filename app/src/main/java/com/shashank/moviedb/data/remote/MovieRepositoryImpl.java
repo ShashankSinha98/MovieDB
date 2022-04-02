@@ -70,6 +70,7 @@ public class MovieRepositoryImpl implements MovieRepository {
 
     @Override
     public void fetchTrendingMovies(ResourceCallback resourceCallback) {
+        resourceCallback.onResponse(Resource.loading("Loading Trending Movies"));
 
         movieApi.fetchTrendingMovie(TRENDING_TIME_WINDOW, QueryParams.PARAMS_TRENDING_MOVIE_API)
                 .subscribeOn(Schedulers.io())

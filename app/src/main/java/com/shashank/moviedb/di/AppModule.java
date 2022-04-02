@@ -61,7 +61,7 @@ public class AppModule {
     @Singleton
     @Provides
     public static RequestOptions provideRequestOptions() {
-        return RequestOptions.placeholderOf(R.drawable.small_placeholder)
+        return RequestOptions.placeholderOf(R.color.transparent)
                 .error(R.drawable.small_placeholder);
     }
 

@@ -7,10 +7,13 @@ import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.RequestManager;
 import com.shashank.moviedb.R;
+import com.shashank.moviedb.common.ViewModelProviderFactory;
 import com.shashank.moviedb.data.Resource;
 import com.shashank.moviedb.data.ResourceCallback;
 import com.shashank.moviedb.data.Status;
@@ -31,7 +34,10 @@ public class HomeFragment extends DaggerFragment {
     @Inject public MovieRecyclerAdapter movieRecyclerAdapter;
     @Inject public RecyclerView.LayoutManager gridLayoutManager;
     @Inject public MovieRepository movieRepository;
+    @Inject public ViewModelProviderFactory providerFactory;
+
     private RecyclerView movieRecyclerView;
+    private HomeViewModel homeViewModel;
 
     @Nullable
     @Override
@@ -45,29 +51,29 @@ public class HomeFragment extends DaggerFragment {
         super.onViewCreated(view, savedInstanceState);
         movieRecyclerView = view.findViewById(R.id.rv_movie);
 
+        homeViewModel = new ViewModelProvider(this, providerFactory).get(HomeViewModel.class);
+
         initUI();
-        movieRepository.fetchTrendingMovies(new ResourceCallback() {
-            @Override
-            public void onResponse(Resource resource) {
-                if(resource.getStatus() == Status.SUCCESS) {
-                    List<MovieResult> movies = ((MovieResponse)resource.getData()).getResults();
-                    movies.add(getExhaustedEntry());
-                    movieRecyclerAdapter.setMovies(movies);
-                }
-            }
-        });
+        initObservers();
     }
 
-    private MovieResult getExhaustedEntry() {
-        MovieResult exhaustedDummyMovie = new MovieResult();
-        exhaustedDummyMovie.setTitle(Constants.CONST_EXHAUSTED);
-        return exhaustedDummyMovie;
-    }
 
     private void initUI() {
         movieRecyclerView.setLayoutManager(gridLayoutManager);
         movieRecyclerView.setAdapter(movieRecyclerAdapter);
     }
+
+
+    private void initObservers() {
+        homeViewModel.getMoviesLiveData().observe(getViewLifecycleOwner(), new Observer<List<MovieResult>>() {
+            @Override
+            public void onChanged(List<MovieResult> movieResults) {
+                movieRecyclerAdapter.setMovies(movieResults);
+            }
+        });
+    }
+
+
 
 
 }
