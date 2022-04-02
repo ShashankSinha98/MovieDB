@@ -1,4 +1,4 @@
-package com.shashank.moviedb.ui.home.adapter;
+package com.shashank.moviedb.ui.trending.adapter;
 
 import android.view.View;
 

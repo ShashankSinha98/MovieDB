@@ -1,4 +1,4 @@
-package com.shashank.moviedb.ui.home.viewholder;
+package com.shashank.moviedb.ui.trending.viewholder;
 
 import android.view.View;
 import android.widget.TextView;
@@ -11,8 +11,6 @@ import com.bumptech.glide.RequestManager;
 import com.shashank.moviedb.R;
 import com.shashank.moviedb.model.MovieResult;
 import com.shashank.moviedb.util.Constants;
-
-import javax.inject.Inject;
 
 public class MovieViewHolder extends RecyclerView.ViewHolder {
 

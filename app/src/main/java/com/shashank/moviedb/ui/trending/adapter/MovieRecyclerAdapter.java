@@ -1,17 +1,16 @@
-package com.shashank.moviedb.ui.home.adapter;
+package com.shashank.moviedb.ui.trending.adapter;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
-import androidx.lifecycle.MutableLiveData;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.RequestManager;
 import com.shashank.moviedb.R;
 import com.shashank.moviedb.model.MovieResult;
-import com.shashank.moviedb.ui.home.viewholder.MovieViewHolder;
+import com.shashank.moviedb.ui.trending.viewholder.MovieViewHolder;
 
 import java.util.ArrayList;
 import java.util.List;

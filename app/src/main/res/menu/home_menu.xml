@@ -6,11 +6,11 @@
     <group android:checkableBehavior="single">
 
         <item
-            android:id="@+id/menu_trending_movie"
+            android:id="@+id/nav_trending"
             android:title="@string/trending"/>
 
         <item
-            android:id="@+id/menu_now_playing_movie"
+            android:id="@+id/nav_now_playing"
             android:title="@string/now_playing"/>
 
         <item

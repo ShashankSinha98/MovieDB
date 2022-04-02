@@ -1,9 +1,9 @@
-package com.shashank.moviedb.di.home;
+package com.shashank.moviedb.di.trending;
 
 import androidx.lifecycle.ViewModel;
 
 import com.shashank.moviedb.di.ViewModelKey;
-import com.shashank.moviedb.ui.home.HomeViewModel;
+import com.shashank.moviedb.ui.trending.TrendingViewModel;
 
 import dagger.Binds;
 import dagger.Module;
@@ -14,6 +14,6 @@ public abstract class HomeViewModelModule {
 
     @Binds
     @IntoMap
-    @ViewModelKey(HomeViewModel.class)
-    abstract ViewModel bindHomeViewModel(HomeViewModel homeViewModel);
+    @ViewModelKey(TrendingViewModel.class)
+    abstract ViewModel bindHomeViewModel(TrendingViewModel trendingViewModel);
 }

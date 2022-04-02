@@ -1,7 +1,6 @@
-package com.shashank.moviedb.ui.home;
+package com.shashank.moviedb.ui.trending;
 
 import android.util.Log;
-import android.widget.Toast;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
@@ -19,7 +18,7 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-public class HomeViewModel extends ViewModel {
+public class TrendingViewModel extends ViewModel {
 
     private static final String TAG = "HomeViewModel";
 
@@ -27,7 +26,7 @@ public class HomeViewModel extends ViewModel {
     private MutableLiveData<List<MovieResult>> _movies = new MutableLiveData<>();
 
     @Inject
-    public HomeViewModel(MovieRepository movieRepository) {
+    public TrendingViewModel(MovieRepository movieRepository) {
         this.movieRepository = movieRepository;
 
         fetchTrendingMovies();

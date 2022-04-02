@@ -1,4 +1,4 @@
-package com.shashank.moviedb.di.home;
+package com.shashank.moviedb.di.trending;
 
 import android.app.Application;
 
@@ -6,7 +6,7 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.RequestManager;
-import com.shashank.moviedb.ui.home.adapter.MovieRecyclerAdapter;
+import com.shashank.moviedb.ui.trending.adapter.MovieRecyclerAdapter;
 
 import dagger.Module;
 import dagger.Provides;

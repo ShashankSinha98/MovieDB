@@ -3,13 +3,18 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main_nav_graph"
-    app:startDestination="@id/nav_home">
+    app:startDestination="@id/nav_trending">
 
-    <!-- Change it to trending/now playing as home page -->
     <fragment
-        android:id="@+id/nav_home"
-        android:name="com.shashank.moviedb.ui.home.HomeFragment"
-        android:label="Home"
-        tools:layout="@layout/fragment_home"/>
+        android:id="@+id/nav_trending"
+        android:name="com.shashank.moviedb.ui.trending.TrendingFragment"
+        android:label="@string/trending"
+        tools:layout="@layout/fragment_trending"/>
+
+    <fragment
+        android:id="@+id/nav_now_playing"
+        android:name="com.shashank.moviedb.ui.nowplaying.NowPlaying"
+        android:label="@string/now_playing"
+        tools:layout="@layout/fragment_now_playing"/>
 
 </navigation>

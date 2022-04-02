@@ -1,4 +1,4 @@
-package com.shashank.moviedb.di.home;
+package com.shashank.moviedb.di.trending;
 
 import java.lang.annotation.Documented;
 import java.lang.annotation.Retention;
