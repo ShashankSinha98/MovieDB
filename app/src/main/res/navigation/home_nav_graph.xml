@@ -13,7 +13,7 @@
 
     <fragment
         android:id="@+id/nav_now_playing"
-        android:name="com.shashank.moviedb.ui.nowplaying.NowPlaying"
+        android:name="com.shashank.moviedb.ui.nowplaying.NowPlayingFragment"
         android:label="@string/now_playing"
         tools:layout="@layout/fragment_now_playing"/>
 

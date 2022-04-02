@@ -11,7 +11,7 @@ public abstract class Constants {
     public static final String BASE_URL = "https://api.themoviedb.org/3/";
     private static final String API_KEY = BuildConfig.API_KEY;
     public static final String LANGUAGE = "en-US";
-    public static final String REGION = "IN";
+    public static final String REGION = "US";
     public static final Long READ_TIMEOUT = 2000L;
 
     public static final String INVALID_MOVIE_ID_ERROR_MSG = "Invalid Movie ID";
