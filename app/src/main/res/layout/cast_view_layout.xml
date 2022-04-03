@@ -8,7 +8,7 @@
     android:layout_height="wrap_content">
 
     <androidx.cardview.widget.CardView
-        android:id="@+id/cardView"
+        android:id="@+id/cvMovie"
         android:layout_width="130dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
@@ -55,9 +55,9 @@
         android:textColor="@color/White_100"
         android:textSize="14sp"
         android:translationZ="8dp"
-        app:layout_constraintBottom_toBottomOf="@+id/cardView"
-        app:layout_constraintEnd_toEndOf="@+id/cardView"
-        app:layout_constraintStart_toStartOf="@+id/cardView" />
+        app:layout_constraintBottom_toBottomOf="@+id/cvMovie"
+        app:layout_constraintEnd_toEndOf="@+id/cvMovie"
+        app:layout_constraintStart_toStartOf="@+id/cvMovie" />
 
 
 

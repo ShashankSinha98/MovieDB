@@ -9,6 +9,8 @@
     android:paddingBottom="16dp">
 
     <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/clDetail"
+        android:visibility="gone"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
@@ -113,7 +115,7 @@
         </LinearLayout>
 
         <TextView
-            android:id="@+id/tvGnreValue"
+            android:id="@+id/tvGenreValue"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="5dp"
@@ -137,15 +139,14 @@
             tools:text=" 1h 40min"
             android:drawableLeft="@drawable/ic_schedule_black_24dp"
             android:textColor="@color/colorAccent"
-            app:layout_constraintStart_toStartOf="@+id/tvGnreValue"
-            app:layout_constraintTop_toBottomOf="@+id/tvGnreValue" />
+            app:layout_constraintStart_toStartOf="@+id/tvGenreValue"
+            app:layout_constraintTop_toBottomOf="@+id/tvGenreValue" />
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/contentDescription"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
-            android:visibility="gone"
             tools:visibility="visible"
             app:layout_constraintTop_toBottomOf="@+id/cardView2">
 
@@ -186,7 +187,7 @@
                 android:textSize="18sp"
                 app:layout_constraintEnd_toEndOf="@+id/tvDescriptionValue"
                 app:layout_constraintStart_toStartOf="@+id/tvDescriptionValue"
-                app:layout_constraintTop_toBottomOf="@+id/rvActors" />
+                app:layout_constraintTop_toBottomOf="@+id/rvCast" />
 
             <TextView
                 android:id="@+id/tvQuoteValue"
@@ -220,7 +221,7 @@
                 app:layout_constraintTop_toBottomOf="@+id/tvDescriptionValue" />
 
             <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/rvActors"
+                android:id="@+id/rvCast"
                 android:layout_width="match_parent"
                 android:layout_height="180dp"
                 android:clipToPadding="false"
@@ -230,7 +231,7 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/tvActorsTitle"
-                tools:listitem="@layout/actor_view_layout"
+                tools:listitem="@layout/cast_view_layout"
                 tools:orientation="horizontal" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>

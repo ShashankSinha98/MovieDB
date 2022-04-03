@@ -9,8 +9,10 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.RequestManager;
 import com.shashank.moviedb.R;
+import com.shashank.moviedb.common.MovieOnClickListener;
 import com.shashank.moviedb.model.MovieResult;
 import com.shashank.moviedb.ui.trending.viewholder.MovieViewHolder;
+import com.shashank.moviedb.util.Constants;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,10 +24,12 @@ public class MovieRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.View
     private static final int MOVIE_TYPE = 1;
     private static final int EXHAUSTED_TYPE = 2;
     private RequestManager requestManager;
+    private MovieOnClickListener movieOnClickListener;
 
     @Inject
-    public MovieRecyclerAdapter(RequestManager requestManager) {
+    public MovieRecyclerAdapter(RequestManager requestManager, MovieOnClickListener movieOnClickListener) {
         this.requestManager = requestManager;
+        this.movieOnClickListener = movieOnClickListener;
     }
 
     private List<MovieResult> mMovies = new ArrayList<>();
@@ -46,7 +50,7 @@ public class MovieRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.View
 
             default:
                 view = LayoutInflater.from(parent.getContext()).inflate(R.layout.movie_view_layout, parent, false);
-                return new MovieViewHolder(view, requestManager);
+                return new MovieViewHolder(view, requestManager, movieOnClickListener);
         }
     }
 
@@ -78,7 +82,14 @@ public class MovieRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.View
 
 
     public void setMovies(List<MovieResult> movies) {
+        if(!movies.isEmpty() && !movies.get(movies.size()-1).getTitle().equals(Constants.CONST_EXHAUSTED)) {movies.add(getExhaustedEntry());}
         this.mMovies = movies;
         notifyDataSetChanged();
+    }
+
+    private MovieResult getExhaustedEntry() {
+        MovieResult exhaustedDummyMovie = new MovieResult();
+        exhaustedDummyMovie.setTitle(Constants.CONST_EXHAUSTED);
+        return exhaustedDummyMovie;
     }
 }

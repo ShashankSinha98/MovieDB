@@ -76,43 +76,6 @@ public class HomeActivity extends DaggerAppCompatActivity implements NavControll
         return NavigationUI.navigateUp(navController, drawerLayout);
     }
 
- /*   @Override
-    public void onDestinationChanged(@NonNull NavController controller,
-                                     @NonNull NavDestination destination,
-                                     @Nullable Bundle arguments) {
-
-        switch (destination.getId()) {
-            case R.id.nav_trending:
-                    toolbar.setVisibility(View.VISIBLE);
-                    toolbarTextView.setText(destination.getLabel());
-                    break;
-
-        }
-    }*/
-
-   /* @Override
-    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-
-        switch (item.getItemId()) {
-            case R.id.menu_trending_movie:
-                if(isValidDestination(R.id.nav_trending)) {
-                    NavOptions navOptions = new NavOptions.Builder().setPopUpTo(R.id.main_nav_graph, true).build();
-                    Navigation.findNavController(this, R.id.nav_host_fragment).navigate(R.id.nav_trending, null, navOptions);
-                }
-                break;
-
-            case R.id.menu_now_playing_movie:
-                if(isValidDestination(R.id.nav_now_playing)) {
-                    Navigation.findNavController(this, R.id.nav_host_fragment).navigate(R.id.nav_now_playing);
-                }
-                break;
-
-
-        }
-        item.setChecked(true);
-        drawerLayout.closeDrawer(GravityCompat.START);
-        return true;
-    }*/
 
     private boolean isValidDestination(int destination) {
         return destination != Navigation.findNavController(this, R.id.nav_host_fragment).getCurrentDestination().getId();
@@ -131,6 +94,10 @@ public class HomeActivity extends DaggerAppCompatActivity implements NavControll
             case R.id.nav_now_playing:
                 toolbar.setVisibility(View.VISIBLE);
                 toolbarTextView.setText(destination.getLabel());
+                break;
+
+            case R.id.nav_detail:
+                toolbar.setVisibility(View.GONE);
                 break;
 
         }

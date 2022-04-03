@@ -9,12 +9,41 @@
         android:id="@+id/nav_trending"
         android:name="com.shashank.moviedb.ui.trending.TrendingFragment"
         android:label="@string/trending"
-        tools:layout="@layout/fragment_trending"/>
+        tools:layout="@layout/fragment_trending">
+        <action
+            android:id="@+id/action_nav_trending_to_detailFragment"
+            app:destination="@id/nav_detail">
+            <argument
+                android:name="movie_id"
+                app:argType="long"
+                android:defaultValue="-1L"/>
+        </action>
+    </fragment>
 
     <fragment
         android:id="@+id/nav_now_playing"
         android:name="com.shashank.moviedb.ui.nowplaying.NowPlayingFragment"
         android:label="@string/now_playing"
-        tools:layout="@layout/fragment_now_playing"/>
+        tools:layout="@layout/fragment_now_playing">
+        <action
+            android:id="@+id/action_nav_now_playing_to_detailFragment"
+            app:destination="@id/nav_detail">
+            <argument
+                android:name="movie_id"
+                app:argType="long"
+                android:defaultValue="-1L"/>
+        </action>
+    </fragment>
+
+
+    <fragment
+        android:id="@+id/nav_detail"
+        android:name="com.shashank.moviedb.ui.detail.DetailFragment"
+        android:label="DetailFragment"
+        tools:layout="@layout/fragment_detail">
+        <argument
+            android:name="movie_id"
+            app:argType="long" />
+    </fragment>
 
 </navigation>

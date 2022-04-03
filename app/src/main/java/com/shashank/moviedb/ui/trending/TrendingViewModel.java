@@ -23,7 +23,7 @@ public class TrendingViewModel extends ViewModel {
     private static final String TAG = "HomeViewModel";
 
     private MovieRepository movieRepository;
-    private MutableLiveData<List<MovieResult>> _movies = new MutableLiveData<>();
+    private MutableLiveData<Resource<List<MovieResult>>> _movies = new MutableLiveData<>();
 
     @Inject
     public TrendingViewModel(MovieRepository movieRepository) {
@@ -32,30 +32,19 @@ public class TrendingViewModel extends ViewModel {
         fetchTrendingMovies();
     }
 
-    private void fetchTrendingMovies() {
+    public void fetchTrendingMovies() {
+        Log.d(TAG, "xlr8: fetchTrendingMovies called");
         movieRepository.fetchTrendingMovies(new ResourceCallback() {
             @Override
             public void onResponse(Resource resource) {
-                if(resource.getStatus() == Status.SUCCESS) {
-                    Log.d(TAG,"xlr8: fetchTrendingMovies: SUCCESS: ");
-                    List<MovieResult> movies = ((MovieResponse)resource.getData()).getResults();
-                    movies.add(getExhaustedEntry());
-                    _movies.postValue(movies);
-                } else if(resource.getStatus()==Status.LOADING) {
-                    String message = (String) resource.getData();
-                    Log.d(TAG,"xlr8: fetchTrendingMovies: msg: "+message);
-                }
+                _movies.postValue(resource);
             }
         });
     }
 
-    private MovieResult getExhaustedEntry() {
-        MovieResult exhaustedDummyMovie = new MovieResult();
-        exhaustedDummyMovie.setTitle(Constants.CONST_EXHAUSTED);
-        return exhaustedDummyMovie;
-    }
 
-    public LiveData<List<MovieResult>> getMoviesLiveData() {
+
+    public LiveData<Resource<List<MovieResult>>> getMoviesLiveData() {
         return _movies;
     }
 

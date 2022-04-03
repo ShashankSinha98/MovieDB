@@ -1,6 +1,7 @@
 package com.shashank.moviedb.ui.nowplaying;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,7 +14,9 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.RequestManager;
 import com.shashank.moviedb.R;
+import com.shashank.moviedb.common.MovieOnClickListener;
 import com.shashank.moviedb.common.ViewModelProviderFactory;
 import com.shashank.moviedb.data.remote.MovieRepository;
 import com.shashank.moviedb.model.MovieResult;
@@ -26,9 +29,11 @@ import javax.inject.Inject;
 
 import dagger.android.support.DaggerFragment;
 
-public class NowPlayingFragment extends DaggerFragment {
+public class NowPlayingFragment extends DaggerFragment implements MovieOnClickListener {
 
-    @Inject public MovieRecyclerAdapter movieRecyclerAdapter;
+    private static final String TAG = "NowPlayingFragment";
+    private MovieRecyclerAdapter movieRecyclerAdapter;
+    @Inject public RequestManager requestManager;
     @Inject public MovieRepository movieRepository;
     @Inject public ViewModelProviderFactory providerFactory;
 
@@ -55,6 +60,7 @@ public class NowPlayingFragment extends DaggerFragment {
 
 
     private void initUI() {
+        movieRecyclerAdapter = new MovieRecyclerAdapter(requestManager, this);
         movieRecyclerView.setLayoutManager(new GridLayoutManager(getActivity(), 2));
         movieRecyclerView.setAdapter(movieRecyclerAdapter);
     }
@@ -69,4 +75,8 @@ public class NowPlayingFragment extends DaggerFragment {
         });
     }
 
+    @Override
+    public void onMovieClick(Long movieId) {
+        Log.d(TAG,"xlr8: movieId: "+movieId);
+    }
 }

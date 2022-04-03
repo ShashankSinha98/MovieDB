@@ -6,20 +6,20 @@ import java.util.List;
 
 public class Credits {
 
-    @Nullable private List<Actor> cast;
+    @Nullable private List<Cast> cast;
 
     public Credits() {}
 
-    public Credits(@Nullable List<Actor> cast) {
+    public Credits(@Nullable List<Cast> cast) {
         this.cast = cast;
     }
 
     @Nullable
-    public List<Actor> getCast() {
+    public List<Cast> getCast() {
         return cast;
     }
 
-    public void setCast(@Nullable List<Actor> cast) {
+    public void setCast(@Nullable List<Cast> cast) {
         this.cast = cast;
     }
 

@@ -42,6 +42,7 @@ public class MovieRepositoryImpl implements MovieRepository {
         movieApi.fetchNowPlayingMovie(QueryParams.PARAMS_NOW_PLAYING_MOVIE_API)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
+                .delay(Constants.DUMMY_NETWORK_DELAY, TimeUnit.MILLISECONDS)
                 .subscribe(new Observer<MovieResponse>() {
                     @Override
                     public void onSubscribe(@NonNull Disposable d) {
@@ -75,6 +76,7 @@ public class MovieRepositoryImpl implements MovieRepository {
         movieApi.fetchTrendingMovie(TRENDING_TIME_WINDOW, QueryParams.PARAMS_TRENDING_MOVIE_API)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
+                .delay(Constants.DUMMY_NETWORK_DELAY, TimeUnit.MILLISECONDS)
                 .subscribe(new Observer<MovieResponse>() {
                     @Override
                     public void onSubscribe(@NonNull Disposable d) {

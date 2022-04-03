@@ -5,15 +5,15 @@ import androidx.annotation.Nullable;
 
 import com.google.gson.annotations.SerializedName;
 
-public class Actor {
+public class Cast {
 
     @NonNull private Long id;
     @NonNull private String name;
     @Nullable @SerializedName("profile_path") private String profilePath;
 
-    public Actor() {}
+    public Cast() {}
 
-    public Actor(@NonNull Long id, @NonNull String name, @Nullable String profilePath) {
+    public Cast(@NonNull Long id, @NonNull String name, @Nullable String profilePath) {
         this.id = id;
         this.name = name;
         this.profilePath = profilePath;
