@@ -5,6 +5,8 @@ import androidx.annotation.Nullable;
 
 import com.google.gson.annotations.SerializedName;
 
+import java.util.List;
+
 public class MovieDetail {
 
     @NonNull private Integer id;
@@ -13,12 +15,16 @@ public class MovieDetail {
     @Nullable @SerializedName("backdrop_path") private String backdropPath;
     @Nullable @SerializedName("vote_average") private Double voteAverage;
     @Nullable private Integer runtime;
-    @Nullable Credits credits;
+    @Nullable private Credits credits;
+    @Nullable private List<Genre> genres;
+    @Nullable private String tagline;
+
+
 
     public MovieDetail() {}
 
-    public MovieDetail(@NonNull Integer id, @NonNull String title, @NonNull String overview, @Nullable String posterPath,
-                       @Nullable String backdropPath, @Nullable Double voteAverage, @Nullable Integer runtime, @Nullable Credits credits) {
+    public MovieDetail(@NonNull Integer id, @NonNull String title, @NonNull String overview,
+                       @Nullable String posterPath, @Nullable String backdropPath, @Nullable Double voteAverage, @Nullable Integer runtime, @Nullable Credits credits, @Nullable List<Genre> genres, @Nullable String tagline) {
         this.id = id;
         this.title = title;
         this.overview = overview;
@@ -27,6 +33,8 @@ public class MovieDetail {
         this.voteAverage = voteAverage;
         this.runtime = runtime;
         this.credits = credits;
+        this.genres = genres;
+        this.tagline = tagline;
     }
 
     @NonNull
@@ -101,6 +109,24 @@ public class MovieDetail {
         this.credits = credits;
     }
 
+    @Nullable
+    public List<Genre> getGenres() {
+        return genres;
+    }
+
+    public void setGenres(@Nullable List<Genre> genres) {
+        this.genres = genres;
+    }
+
+    @Nullable
+    public String getTagline() {
+        return tagline;
+    }
+
+    public void setTagline(@Nullable String tagline) {
+        this.tagline = tagline;
+    }
+
     @Override
     public String toString() {
         return "MovieDetail{" +
@@ -112,6 +138,8 @@ public class MovieDetail {
                 ", voteAverage=" + voteAverage +
                 ", runtime=" + runtime +
                 ", credits=" + credits +
+                ", genres=" + genres +
+                ", tagline='" + tagline + '\'' +
                 '}';
     }
 }
