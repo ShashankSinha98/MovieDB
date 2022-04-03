@@ -21,12 +21,14 @@ import com.shashank.moviedb.R;
 import com.shashank.moviedb.common.MovieOnClickListener;
 import com.shashank.moviedb.common.ViewModelProviderFactory;
 import com.shashank.moviedb.data.Resource;
+import com.shashank.moviedb.data.Status;
 import com.shashank.moviedb.data.remote.MovieRepository;
 import com.shashank.moviedb.model.MovieResponse;
 import com.shashank.moviedb.model.MovieResult;
 import com.shashank.moviedb.ui.trending.TrendingFragmentDirections.ActionNavTrendingToDetailFragment;
 import com.shashank.moviedb.ui.trending.adapter.MovieRecyclerAdapter;
 import com.shashank.moviedb.util.Constants;
+import com.shashank.moviedb.view.customview.NoInternetView;
 
 import java.util.List;
 
@@ -45,6 +47,7 @@ public class TrendingFragment extends DaggerFragment implements MovieOnClickList
     private RecyclerView movieRecyclerView;
     private TrendingViewModel trendingViewModel;
     private SwipeRefreshLayout swipeRefreshLayout;
+    private NoInternetView noInternetView;
 
     @Nullable
     @Override
@@ -58,6 +61,7 @@ public class TrendingFragment extends DaggerFragment implements MovieOnClickList
         super.onViewCreated(view, savedInstanceState);
         movieRecyclerView = view.findViewById(R.id.rv_movie);
         swipeRefreshLayout = view.findViewById(R.id.swipe);
+        noInternetView = view.findViewById(R.id.noInternetView);
 
         trendingViewModel = new ViewModelProvider(this, providerFactory).get(TrendingViewModel.class);
 
@@ -87,6 +91,8 @@ public class TrendingFragment extends DaggerFragment implements MovieOnClickList
                     case SUCCESS:
                         Log.d(TAG, "xlr8: initObservers : SUCCESS");
                         swipeRefreshLayout.setRefreshing(false);
+                        movieRecyclerView.setVisibility(View.VISIBLE);
+                        noInternetView.update(Status.SUCCESS, null);
                         List<MovieResult> movies = ((MovieResponse)listResource.getData()).getResults();
                         if(movies!=null && !movies.isEmpty()){
                             movieRecyclerAdapter.setMovies(movies);
@@ -96,6 +102,14 @@ public class TrendingFragment extends DaggerFragment implements MovieOnClickList
                     case ERROR:
                         Log.d(TAG, "xlr8: initObservers : ERROR");
                         swipeRefreshLayout.setRefreshing(false);
+                        movieRecyclerView.setVisibility(View.GONE);
+                        // TODO: check if error is of internet connection or something else
+                        noInternetView.update(Status.ERROR, new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                onRefresh();
+                            }
+                        });
                         String errorMessage = listResource.getMessage();
                         Log.d(TAG,"errorMessage: "+errorMessage);
                         break;

@@ -6,4 +6,7 @@
     <string name="description_title">Description</string>
     <string name="tagline">Famouse Phrase</string>
     <string name="cast_title">Cast</string>
+    <string name="oops">Ooopss!!</string>
+    <string name="check_network_connection">Please check your Internet Connection</string>
+    <string name="retry">Retry</string>
 </resources>
