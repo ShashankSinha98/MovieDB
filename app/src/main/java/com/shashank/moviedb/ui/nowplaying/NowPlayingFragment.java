@@ -11,15 +11,20 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.bumptech.glide.RequestManager;
 import com.shashank.moviedb.R;
 import com.shashank.moviedb.common.MovieOnClickListener;
 import com.shashank.moviedb.common.ViewModelProviderFactory;
+import com.shashank.moviedb.data.Resource;
 import com.shashank.moviedb.data.remote.MovieRepository;
+import com.shashank.moviedb.model.MovieResponse;
 import com.shashank.moviedb.model.MovieResult;
+import com.shashank.moviedb.ui.trending.TrendingFragmentDirections;
 import com.shashank.moviedb.ui.trending.TrendingViewModel;
 import com.shashank.moviedb.ui.trending.adapter.MovieRecyclerAdapter;
 
@@ -29,7 +34,7 @@ import javax.inject.Inject;
 
 import dagger.android.support.DaggerFragment;
 
-public class NowPlayingFragment extends DaggerFragment implements MovieOnClickListener {
+public class NowPlayingFragment extends DaggerFragment implements MovieOnClickListener, SwipeRefreshLayout.OnRefreshListener {
 
     private static final String TAG = "NowPlayingFragment";
     private MovieRecyclerAdapter movieRecyclerAdapter;
@@ -39,6 +44,7 @@ public class NowPlayingFragment extends DaggerFragment implements MovieOnClickLi
 
     private RecyclerView movieRecyclerView;
     private NowPlayingViewModel nowPlayingViewModel;
+    private SwipeRefreshLayout swipeRefreshLayout;
 
     @Nullable
     @Override
@@ -51,6 +57,7 @@ public class NowPlayingFragment extends DaggerFragment implements MovieOnClickLi
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         movieRecyclerView = view.findViewById(R.id.rv_movie);
+        swipeRefreshLayout = view.findViewById(R.id.swipe);
 
         nowPlayingViewModel = new ViewModelProvider(this, providerFactory).get(NowPlayingViewModel.class);
 
@@ -60,6 +67,7 @@ public class NowPlayingFragment extends DaggerFragment implements MovieOnClickLi
 
 
     private void initUI() {
+        swipeRefreshLayout.setOnRefreshListener(this);
         movieRecyclerAdapter = new MovieRecyclerAdapter(requestManager, this);
         movieRecyclerView.setLayoutManager(new GridLayoutManager(getActivity(), 2));
         movieRecyclerView.setAdapter(movieRecyclerAdapter);
@@ -67,10 +75,31 @@ public class NowPlayingFragment extends DaggerFragment implements MovieOnClickLi
 
 
     private void initObservers() {
-        nowPlayingViewModel.getMoviesLiveData().observe(getViewLifecycleOwner(), new Observer<List<MovieResult>>() {
+        nowPlayingViewModel.getMoviesLiveData().observe(getViewLifecycleOwner(), new Observer<Resource<List<MovieResult>>>() {
             @Override
-            public void onChanged(List<MovieResult> movieResults) {
-                movieRecyclerAdapter.setMovies(movieResults);
+            public void onChanged(Resource<List<MovieResult>> listResource) {
+                switch (listResource.getStatus()) {
+                    case SUCCESS:
+                        Log.d(TAG, "xlr8: initObservers : SUCCESS");
+                        swipeRefreshLayout.setRefreshing(false);
+                        List<MovieResult> movies = ((MovieResponse)listResource.getData()).getResults();
+                        if(movies!=null && !movies.isEmpty()){
+                            movieRecyclerAdapter.setMovies(movies);
+                        }
+                        break;
+
+                    case ERROR:
+                        Log.d(TAG, "xlr8: initObservers : ERROR");
+                        swipeRefreshLayout.setRefreshing(false);
+                        String errorMessage = listResource.getMessage();
+                        Log.d(TAG,"errorMessage: "+errorMessage);
+                        break;
+
+                    case LOADING:
+                        Log.d(TAG, "xlr8: initObservers : LOADING");
+                        swipeRefreshLayout.setRefreshing(true);
+                        break;
+                }
             }
         });
     }
@@ -78,5 +107,14 @@ public class NowPlayingFragment extends DaggerFragment implements MovieOnClickLi
     @Override
     public void onMovieClick(Long movieId) {
         Log.d(TAG,"xlr8: movieId: "+movieId);
+        NowPlayingFragmentDirections.ActionNavNowPlayingToDetailFragment action = NowPlayingFragmentDirections.actionNavNowPlayingToDetailFragment();
+        action.setMovieId(movieId);
+        Navigation.findNavController(getActivity(), R.id.nav_host_fragment).navigate(action);
+
+    }
+
+    @Override
+    public void onRefresh() {
+        nowPlayingViewModel.fetchNowPlayingMovies();
     }
 }

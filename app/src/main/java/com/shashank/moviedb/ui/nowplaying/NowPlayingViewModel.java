@@ -23,7 +23,7 @@ public class NowPlayingViewModel extends ViewModel {
     private static final String TAG = "HomeViewModel";
 
     private MovieRepository movieRepository;
-    private MutableLiveData<List<MovieResult>> _movies = new MutableLiveData<>();
+    private MutableLiveData<Resource<List<MovieResult>>> _movies = new MutableLiveData<>();
 
     @Inject
     public NowPlayingViewModel(MovieRepository movieRepository) {
@@ -32,19 +32,11 @@ public class NowPlayingViewModel extends ViewModel {
         fetchNowPlayingMovies();
     }
 
-    private void fetchNowPlayingMovies() {
+    public void fetchNowPlayingMovies() {
         movieRepository.fetchNowPlayingMovies(new ResourceCallback() {
             @Override
             public void onResponse(Resource resource) {
-                if(resource.getStatus() == Status.SUCCESS) {
-                    Log.d(TAG,"xlr8: fetchNowPlayingMovies: SUCCESS: ");
-                    List<MovieResult> movies = ((MovieResponse)resource.getData()).getResults();
-                    movies.add(getExhaustedEntry());
-                    _movies.postValue(movies);
-                } else if(resource.getStatus()==Status.LOADING) {
-                    String message = (String) resource.getData();
-                    Log.d(TAG,"xlr8: fetchNowPlayingMovies: msg: "+message);
-                }
+                _movies.postValue(resource);
             }
         });
     }
@@ -55,7 +47,7 @@ public class NowPlayingViewModel extends ViewModel {
         return exhaustedDummyMovie;
     }
 
-    public LiveData<List<MovieResult>> getMoviesLiveData() {
+    public LiveData<Resource<List<MovieResult>>> getMoviesLiveData() {
         return _movies;
     }
 

@@ -12,7 +12,11 @@
         tools:layout="@layout/fragment_trending">
         <action
             android:id="@+id/action_nav_trending_to_detailFragment"
-            app:destination="@id/nav_detail">
+            app:destination="@id/nav_detail"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right">
             <argument
                 android:name="movie_id"
                 app:argType="long"
@@ -27,7 +31,11 @@
         tools:layout="@layout/fragment_now_playing">
         <action
             android:id="@+id/action_nav_now_playing_to_detailFragment"
-            app:destination="@id/nav_detail">
+            app:destination="@id/nav_detail"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right">
             <argument
                 android:name="movie_id"
                 app:argType="long"

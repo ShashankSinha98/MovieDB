@@ -38,6 +38,7 @@ public class MovieRepositoryImpl implements MovieRepository {
 
     @Override
     public void fetchNowPlayingMovies(ResourceCallback resourceCallback) {
+        resourceCallback.onResponse(Resource.loading("Loading Now Playing Movies"));
 
         movieApi.fetchNowPlayingMovie(QueryParams.PARAMS_NOW_PLAYING_MOVIE_API)
                 .subscribeOn(Schedulers.io())
