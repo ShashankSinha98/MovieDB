@@ -29,6 +29,7 @@ public class MovieResult {
     @ColumnInfo(name = "vote_average")
     @Nullable @SerializedName("vote_average") private Double voteAverage;
 
+
     public MovieResult() { }
 
     public MovieResult(@NonNull Long id, @NonNull String originalTitle, @NonNull String title, @Nullable String posterPath,

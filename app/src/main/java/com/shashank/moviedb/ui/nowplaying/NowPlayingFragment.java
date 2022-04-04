@@ -88,7 +88,7 @@ public class NowPlayingFragment extends DaggerFragment implements MovieOnClickLi
                         swipeRefreshLayout.setRefreshing(false);
                         movieRecyclerView.setVisibility(View.VISIBLE);
                         noInternetView.update(Status.SUCCESS, null);
-                        List<MovieResult> movies = ((MovieResponse)listResource.getData()).getResults();
+                        List<MovieResult> movies = listResource.getData();
                         if(movies!=null && !movies.isEmpty()){
                             movieRecyclerAdapter.setMovies(movies);
                         }

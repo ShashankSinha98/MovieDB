@@ -22,6 +22,10 @@ public abstract class Constants {
     public static final Long DUMMY_NETWORK_DELAY = 1500L;
 
 
+    public static final int STATUS_TRENDING = 0;
+    public static final int STATUS_NOW_PLAYING = 1;
+
+
 
 
 

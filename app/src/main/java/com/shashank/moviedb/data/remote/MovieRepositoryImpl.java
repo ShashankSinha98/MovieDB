@@ -1,5 +1,6 @@
 package com.shashank.moviedb.data.remote;
 
+import static com.shashank.moviedb.util.Constants.*;
 import static com.shashank.moviedb.util.Constants.TRENDING_TIME_WINDOW;
 
 import android.util.Log;
@@ -9,13 +10,14 @@ import androidx.annotation.NonNull;
 import com.shashank.moviedb.data.ResourceCallback;
 import com.shashank.moviedb.data.Resource;
 import com.shashank.moviedb.data.local.MovieDao;
-import com.shashank.moviedb.data.local.MovieDatabase;
 import com.shashank.moviedb.model.MovieDetail;
 import com.shashank.moviedb.model.MovieResponse;
 import com.shashank.moviedb.model.MovieResult;
-import com.shashank.moviedb.util.Constants;
+import com.shashank.moviedb.model.NowPlayingMovieIdsEntity;
+import com.shashank.moviedb.model.TrendingMovieIdsEntity;
 import com.shashank.moviedb.util.Constants.QueryParams;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -24,7 +26,6 @@ import javax.inject.Inject;
 import io.reactivex.Completable;
 import io.reactivex.CompletableObserver;
 import io.reactivex.Observer;
-import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Action;
 import io.reactivex.functions.Consumer;
@@ -50,8 +51,8 @@ public class MovieRepositoryImpl implements MovieRepository {
 
         movieApi.fetchNowPlayingMovie(QueryParams.PARAMS_NOW_PLAYING_MOVIE_API)
                 .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .delay(Constants.DUMMY_NETWORK_DELAY, TimeUnit.MILLISECONDS)
+                //.observeOn(AndroidSchedulers.mainThread())
+                .delay(DUMMY_NETWORK_DELAY, TimeUnit.MILLISECONDS)
                 .subscribe(new Observer<MovieResponse>() {
                     @Override
                     public void onSubscribe(@NonNull Disposable d) {
@@ -61,13 +62,17 @@ public class MovieRepositoryImpl implements MovieRepository {
                     @Override
                     public void onNext(@NonNull MovieResponse movieResponse) {
                         Log.d(TAG,"fetchNowPlayingMovies - onNext: movieResponse: "+movieResponse);
-                        resourceCallback.onResponse(Resource.success(movieResponse));
+                        try {
+                            processMovieResponse(movieResponse, resourceCallback, STATUS_NOW_PLAYING);
+                        } catch (Exception e) {
+                            resourceCallback.onResponse(Resource.error(e.getMessage(), null));
+                        }
                     }
 
                     @Override
                     public void onError(@NonNull Throwable e) {
                         Log.d(TAG, "fetchNowPlayingMovies - onError: e: "+e.getMessage());
-                        resourceCallback.onResponse(Resource.error(e.getMessage(), null));
+                        checkMovieDataInDatabase(resourceCallback, STATUS_NOW_PLAYING);
                     }
 
                     @Override
@@ -85,7 +90,7 @@ public class MovieRepositoryImpl implements MovieRepository {
         movieApi.fetchTrendingMovie(TRENDING_TIME_WINDOW, QueryParams.PARAMS_TRENDING_MOVIE_API)
                 .subscribeOn(Schedulers.io())
                 //.observeOn(AndroidSchedulers.mainThread())
-                .delay(Constants.DUMMY_NETWORK_DELAY, TimeUnit.MILLISECONDS)
+                .delay(DUMMY_NETWORK_DELAY, TimeUnit.MILLISECONDS)
                 .subscribe(new Observer<MovieResponse>() {
                     @Override
                     public void onSubscribe(@NonNull Disposable d) {
@@ -95,15 +100,18 @@ public class MovieRepositoryImpl implements MovieRepository {
                     @Override
                     public void onNext(@NonNull MovieResponse movieResponse) {
                         Log.d(TAG,"fetchTrendingMovies - onNext: movieResponse: "+movieResponse);
-                        //resourceCallback.onResponse(Resource.success(movieResponse));
-                        processMovieResponse(movieResponse, resourceCallback);
+                        try {
+                            processMovieResponse(movieResponse, resourceCallback, STATUS_TRENDING);
+                        } catch (Exception e) {
+                            resourceCallback.onResponse(Resource.error(e.getMessage(), null));
+                        }
                     }
 
                     @Override
                     public void onError(@NonNull Throwable e) {
                         Log.d(TAG, "xlr8: fetchTrendingMovies - onError: e: "+e.getMessage());
                         //resourceCallback.onResponse(Resource.error(e.getMessage(), null));
-                        checkDataInDatabase(resourceCallback);
+                        checkMovieDataInDatabase(resourceCallback, STATUS_TRENDING);
                     }
 
                     @Override
@@ -118,7 +126,7 @@ public class MovieRepositoryImpl implements MovieRepository {
     public void fetchMovieDetail(Long movieId, ResourceCallback resourceCallback) {
 
         if(movieId==null || movieId<=0L) {
-            resourceCallback.onResponse(Resource.error(Constants.INVALID_MOVIE_ID_ERROR_MSG,null));
+            resourceCallback.onResponse(Resource.error(INVALID_MOVIE_ID_ERROR_MSG,null));
             return;
         }
 
@@ -151,9 +159,10 @@ public class MovieRepositoryImpl implements MovieRepository {
     }
 
 
+    /**********************************************     PRIVATE  HELPER   FUNCTIONS     *****************************************************************************/
 
     // Save remote data in room db, read data from db and then pass it to callback
-    private void processMovieResponse(MovieResponse movieResponse, ResourceCallback callback) {
+    private void processMovieResponse(MovieResponse movieResponse, ResourceCallback callback, int movieStatus) throws Exception {
         Log.d(TAG, "xlr8: processMovieResponse called: movieResponse: "+movieResponse);
 
         if(movieResponse==null || movieResponse.getResults()==null || movieResponse.getResults().isEmpty()) {
@@ -163,13 +172,18 @@ public class MovieRepositoryImpl implements MovieRepository {
 
         List<MovieResult> movies = movieResponse.getResults();
 
-        // Insert movies data in database
+        // step 1- Insert movies data in database
         Completable.fromAction(new Action() {
             @Override
             public void run() throws Exception {
+
+                // Step 1.1- Insert movie ids into respective Entity
+                insertMovieIdsIntoRespectiveEntity(movies, movieStatus);
+
+                // Step 1.2- Insert MovieResult in main movie table
                 movieDao.insertMovieResults(movies.toArray(new MovieResult[movies.size()]));
             }
-        }).subscribeOn(Schedulers.io())
+        }).subscribeOn(Schedulers.computation())
             .subscribe(new CompletableObserver() {
             @Override
             public void onSubscribe(@NonNull Disposable d) {
@@ -180,8 +194,9 @@ public class MovieRepositoryImpl implements MovieRepository {
             public void onComplete() {
                 Log.d(TAG, "xlr8: processMovieResponse: onComplete");
                 // Movies inserted in DB Successfully
-                // Fetch movies data from DB and pass it to callback
-                checkDataInDatabase(callback);
+
+                // Step 2- Fetch movies data from DB and pass it to UI
+                checkMovieDataInDatabase(callback, movieStatus);
             }
 
             @Override
@@ -192,11 +207,74 @@ public class MovieRepositoryImpl implements MovieRepository {
         });
     }
 
+    private void insertMovieIdsIntoRespectiveEntity(List<MovieResult> movies, int movieStatus) {
+        if(movieStatus== STATUS_NOW_PLAYING) {
+            List<NowPlayingMovieIdsEntity> nowPlayingMovieIds = new ArrayList<>();
+            for(MovieResult movie: movies) {
+                nowPlayingMovieIds.add(new NowPlayingMovieIdsEntity(movie.getId()));
+            }
+            movieDao.insertNowPlayingMovieIds(nowPlayingMovieIds.toArray(new NowPlayingMovieIdsEntity[nowPlayingMovieIds.size()]));
 
-    private void checkDataInDatabase(ResourceCallback callback) {
+        } else if(movieStatus== STATUS_TRENDING) {
+            List<TrendingMovieIdsEntity> trendingMovieIds = new ArrayList<>();
+            for(MovieResult movie: movies) {
+                trendingMovieIds.add(new TrendingMovieIdsEntity(movie.getId()));
+            }
+            movieDao.insertTrendingMovieIds(trendingMovieIds.toArray(new TrendingMovieIdsEntity[trendingMovieIds.size()]));
+        }
+    }
+
+    // Check data in DB, if present - pass via callback
+    private void checkMovieDataInDatabase(ResourceCallback callback, int movieStatus) {
         Log.d(TAG, "xlr8 : checkDataInDatabase called");
+
+        // Step 2.1 - Get list of movie ids from respective movie status table
+        if(movieStatus==STATUS_TRENDING) {
+            movieDao.getTrendingMovieIds().subscribeOn(Schedulers.io())
+                    .subscribe(new Consumer<List<TrendingMovieIdsEntity>>() {
+                        @Override
+                        public void accept(List<TrendingMovieIdsEntity> trendingMovieIdsEntities) throws Exception {
+                            if(trendingMovieIdsEntities!=null && !trendingMovieIdsEntities.isEmpty()) {
+                                List<Long> trendingMovieIds = new ArrayList<>();
+                                for(TrendingMovieIdsEntity trendingMovieIdsEntity: trendingMovieIdsEntities) {
+                                    trendingMovieIds.add(trendingMovieIdsEntity.getMovieId());
+                                }
+
+                                // Step 2.2- fetch movie of these ids only
+                                checkMovieDataInDatabaseForIds(callback, trendingMovieIds);
+                            } else {
+                                callback.onResponse(Resource.error("Error/Empty response while querying DB", null));
+                            }
+                        }
+                    });
+
+        }
+        // Step 2.1 - Get list of movie ids from respective movie status table
+        else if(movieStatus==STATUS_NOW_PLAYING) {
+            movieDao.getNowPlayingMovieIds().subscribeOn(Schedulers.io())
+                    .subscribe(new Consumer<List<NowPlayingMovieIdsEntity>>() {
+                        @Override
+                        public void accept(List<NowPlayingMovieIdsEntity> nowPlayingMovieIdsEntities) throws Exception {
+                            if(nowPlayingMovieIdsEntities!=null && !nowPlayingMovieIdsEntities.isEmpty()) {
+                                List<Long> nowPlayingMovieIds = new ArrayList<>();
+                                for(NowPlayingMovieIdsEntity nowPlayingMovieIdsEntity: nowPlayingMovieIdsEntities) {
+                                    nowPlayingMovieIds.add(nowPlayingMovieIdsEntity.getMovieId());
+                                }
+
+                                // Step 2.2- fetch movie of these ids only
+                                checkMovieDataInDatabaseForIds(callback, nowPlayingMovieIds);
+                            } else {
+                                callback.onResponse(Resource.error("Error/Empty response while querying DB", null));
+                            }
+                        }
+                    });
+        }
+
+    }
+
+    private void checkMovieDataInDatabaseForIds(ResourceCallback callback, List<Long> movieIds) {
         // Fetch movies data from DB
-        movieDao.getMovieResults().subscribeOn(Schedulers.io())
+        movieDao.getMovieResultsForMovieIds(movieIds).subscribeOn(Schedulers.io())
                 .subscribe(new Consumer<List<MovieResult>>() {
                     @Override
                     public void accept(List<MovieResult> movieResults) throws Exception {

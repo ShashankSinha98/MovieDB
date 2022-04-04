@@ -7,6 +7,8 @@ import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
 
 import com.shashank.moviedb.model.MovieResult;
+import com.shashank.moviedb.model.NowPlayingMovieIdsEntity;
+import com.shashank.moviedb.model.TrendingMovieIdsEntity;
 
 import java.util.List;
 
@@ -23,12 +25,22 @@ public interface MovieDao {
     void insertMovieResults(MovieResult... movieResults);
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    void insertMovieResult(MovieResult movieResult);
+    void insertTrendingMovieIds(TrendingMovieIdsEntity... trendingMovieIds);
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    void insertNowPlayingMovieIds(NowPlayingMovieIdsEntity... trendingMovieIds);
+
 
     @Query("SELECT * FROM movies")
     Flowable<List<MovieResult>> getMovieResults();
 
-    @Query("SELECT COUNT(*) FROM movies")
-    Flowable<Integer> getMovieCount();
+    @Query("SELECT * FROM trending_movie_ids")
+    Flowable<List<TrendingMovieIdsEntity>> getTrendingMovieIds();
+
+    @Query("SELECT * FROM nowplaying_movie_ids")
+    Flowable<List<NowPlayingMovieIdsEntity>> getNowPlayingMovieIds();
+
+    @Query("SELECT * FROM movies WHERE id IN (:movieIds)")
+    Flowable<List<MovieResult>> getMovieResultsForMovieIds(List<Long> movieIds);
 
 }
