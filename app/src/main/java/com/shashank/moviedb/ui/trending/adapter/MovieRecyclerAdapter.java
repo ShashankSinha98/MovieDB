@@ -82,7 +82,7 @@ public class MovieRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.View
 
 
     public void setMovies(List<MovieResult> movies) {
-        if(!movies.isEmpty() && !movies.get(movies.size()-1).getTitle().equals(Constants.CONST_EXHAUSTED)) {movies.add(getExhaustedEntry());}
+        //if(!movies.isEmpty() && !movies.get(movies.size()-1).getTitle().equals(Constants.CONST_EXHAUSTED)) {movies.add(getExhaustedEntry());}
         this.mMovies = movies;
         notifyDataSetChanged();
     }

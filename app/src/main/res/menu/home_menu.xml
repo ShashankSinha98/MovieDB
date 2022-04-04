@@ -14,8 +14,9 @@
             android:title="@string/now_playing"/>
 
         <item
-            android:id="@+id/menu_favourites"
+            android:id="@+id/nav_favourite"
             android:title="@string/favourites"/>
+
 
     </group>
 

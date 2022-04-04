@@ -1,17 +1,17 @@
-package com.shashank.moviedb.model;
+package com.shashank.moviedb.data.local.entity;
 
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
-@Entity(tableName = "trending_movie_ids")
-public class TrendingMovieIdsEntity {
+@Entity(tableName = "nowplaying_movie_ids")
+public class NowPlayingMovieIdsEntity {
 
     @PrimaryKey(autoGenerate = false)
     @ColumnInfo(name = "movie_id")
     private Long movieId;
 
-    public TrendingMovieIdsEntity(Long movieId) {
+    public NowPlayingMovieIdsEntity(Long movieId) {
         this.movieId = movieId;
     }
 

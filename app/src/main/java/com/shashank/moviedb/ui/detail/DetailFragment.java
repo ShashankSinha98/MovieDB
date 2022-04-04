@@ -33,10 +33,10 @@ import javax.inject.Inject;
 
 import dagger.android.support.DaggerFragment;
 
-public class DetailFragment extends DaggerFragment {
+public class DetailFragment extends DaggerFragment implements View.OnClickListener {
 
     private static final String TAG = "DetailFragment";
-    private AppCompatImageView ivBackdrop, ivPoster;
+    private AppCompatImageView ivBackdrop, ivPoster, ivFavorite;
     private TextView tvMovieTitle, tvVoteAverage, tvDuration, tvGenre, tvDescription, tvQuote;
     private RecyclerView castRecyclerView;
     private ConstraintLayout detailLayout;
@@ -45,6 +45,7 @@ public class DetailFragment extends DaggerFragment {
     @Inject public RequestManager requestManager;
     @Inject public CastRecyclerAdapter castRecyclerAdapter;
     private DetailViewModel detailViewModel;
+    private Long movieId;
 
     @Nullable
     @Override
@@ -62,7 +63,7 @@ public class DetailFragment extends DaggerFragment {
         initUI();
         initObservers();
 
-        Long movieId = DetailFragmentArgs.fromBundle(getArguments()).getMovieId();
+        movieId = DetailFragmentArgs.fromBundle(getArguments()).getMovieId();
         detailViewModel.getMovieDetail(movieId);
     }
 
@@ -76,6 +77,18 @@ public class DetailFragment extends DaggerFragment {
                         updateLayoutWithMovieData(movieDetail);
                         break;
                 } 
+            }
+        });
+
+        detailViewModel.getFavouriteIconStatus().observe(getViewLifecycleOwner(), new Observer<Resource<Boolean>>() {
+            @Override
+            public void onChanged(Resource<Boolean> booleanResource) {
+                switch (booleanResource.getStatus()) {
+                    case SUCCESS:
+                        boolean isFavorite = booleanResource.getData();
+                        ivFavorite.setImageResource((isFavorite)? R.drawable.ic_favorite_black_24dp : R.drawable.ic_favorite_border_black_24dp);
+                        break;
+                }
             }
         });
     }
@@ -132,10 +145,20 @@ public class DetailFragment extends DaggerFragment {
         tvQuote = view.findViewById(R.id.tvQuoteValue);
         castRecyclerView = view.findViewById(R.id.rvCast);
         detailLayout = view.findViewById(R.id.clDetail);
+        ivFavorite = view.findViewById(R.id.ivFavorite);
+
+        ivFavorite.setOnClickListener(this);
     }
 
     private void initUI() {
         castRecyclerView.setLayoutManager(new LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false));
         castRecyclerView.setAdapter(castRecyclerAdapter);
+    }
+
+    @Override
+    public void onClick(View view) {
+        if(view.getId()==R.id.ivFavorite) {
+            detailViewModel.updateFavourite(movieId);
+        }
     }
 }

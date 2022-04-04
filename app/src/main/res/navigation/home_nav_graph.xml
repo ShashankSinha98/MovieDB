@@ -47,11 +47,30 @@
     <fragment
         android:id="@+id/nav_detail"
         android:name="com.shashank.moviedb.ui.detail.DetailFragment"
-        android:label="DetailFragment"
+        android:label="Detail"
         tools:layout="@layout/fragment_detail">
         <argument
             android:name="movie_id"
-            app:argType="long" />
+            app:argType="long"
+            android:defaultValue="-1L"/>
+    </fragment>
+    <fragment
+        android:id="@+id/nav_favourite"
+        android:name="com.shashank.moviedb.ui.favourites.FavouriteFragment"
+        android:label="Favourites"
+        tools:layout="@layout/fragment_favourite">
+        <action
+            android:id="@+id/action_favouriteFragment_to_nav_detail"
+            app:destination="@id/nav_detail"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right">
+            <argument
+                android:name="movie_id"
+                app:argType="long"
+                android:defaultValue="-1L"/>
+        </action>
     </fragment>
 
 </navigation>

@@ -1,5 +1,5 @@
 package com.shashank.moviedb.data;
 
-public interface ResourceCallback {
-    void onResponse(Resource resource);
+public interface ResourceCallback<T> {
+    void onResponse(Resource<T> resource);
 }

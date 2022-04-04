@@ -10,11 +10,12 @@ import androidx.annotation.NonNull;
 import com.shashank.moviedb.data.ResourceCallback;
 import com.shashank.moviedb.data.Resource;
 import com.shashank.moviedb.data.local.MovieDao;
+import com.shashank.moviedb.data.local.entity.FavouriteMovieIdsEntity;
 import com.shashank.moviedb.model.MovieDetail;
 import com.shashank.moviedb.model.MovieResponse;
 import com.shashank.moviedb.model.MovieResult;
-import com.shashank.moviedb.model.NowPlayingMovieIdsEntity;
-import com.shashank.moviedb.model.TrendingMovieIdsEntity;
+import com.shashank.moviedb.data.local.entity.NowPlayingMovieIdsEntity;
+import com.shashank.moviedb.data.local.entity.TrendingMovieIdsEntity;
 import com.shashank.moviedb.util.Constants.QueryParams;
 
 import java.util.ArrayList;
@@ -158,6 +159,116 @@ public class MovieRepositoryImpl implements MovieRepository {
                 });
     }
 
+    @Override
+    public void isFavourite(long movieId, ResourceCallback<Boolean> resourceCallback) {
+        resourceCallback.onResponse(Resource.loading("Querying favourite status for movieId: "+movieId));
+
+        movieDao.getFavouriteCountForMovieId(movieId)
+                .subscribeOn(Schedulers.io())
+                .subscribe(new Consumer<Integer>() {
+                    @Override
+                    public void accept(Integer count) throws Exception {
+                        resourceCallback.onResponse(Resource.success((count>0)));
+                    }
+                });
+    }
+
+
+    @Override
+    public void addFavourite(long movieId, ResourceCallback<Boolean> resourceCallback) {
+        resourceCallback.onResponse(Resource.loading("Adding Movie to Favourite, movieId: "+movieId));
+
+        Completable.fromAction(new Action() {
+            @Override
+            public void run() throws Exception {
+                movieDao.insertFavouriteMovieId(new FavouriteMovieIdsEntity(movieId));
+            }
+        }).subscribeOn(Schedulers.io())
+                .subscribe(new CompletableObserver() {
+                    @Override
+                    public void onSubscribe(@NonNull Disposable d) {
+
+                    }
+
+                    @Override
+                    public void onComplete() {
+                        resourceCallback.onResponse(Resource.success(true));
+                    }
+
+                    @Override
+                    public void onError(@NonNull Throwable e) {
+                        resourceCallback.onResponse(Resource.error("Error adding movieId: "+movieId+" to favourite", null));
+                    }
+                });
+
+    }
+
+    @Override
+    public void removeFavourite(long movieId, ResourceCallback<Boolean> resourceCallback) {
+        resourceCallback.onResponse(Resource.loading("Removing Movie from Favourite, movieId: "+movieId));
+
+        Completable.fromAction(new Action() {
+            @Override
+            public void run() throws Exception {
+                movieDao.deleteFavouriteMovieId(new FavouriteMovieIdsEntity(movieId));
+            }
+        }).subscribeOn(Schedulers.io())
+                .subscribe(new CompletableObserver() {
+                    @Override
+                    public void onSubscribe(@NonNull Disposable d) {
+
+                    }
+
+                    @Override
+                    public void onComplete() {
+                        resourceCallback.onResponse(Resource.success(false));
+                    }
+
+                    @Override
+                    public void onError(@NonNull Throwable e) {
+                        resourceCallback.onResponse(Resource.error("Error removing movieId: "+movieId+" from favourite", null));
+                    }
+                });
+
+    }
+
+    @Override
+    public void getFavouriteMovieIds(ResourceCallback<List<Long>> resourceCallback) {
+        resourceCallback.onResponse(Resource.loading("Querying Favourite movie ids from db"));
+
+        movieDao.getFavouriteMovieIdsEntities()
+                .subscribeOn(Schedulers.computation())
+                .subscribe(new Consumer<List<FavouriteMovieIdsEntity>>() {
+                    @Override
+                    public void accept(List<FavouriteMovieIdsEntity> favouriteMovieIdsEntities) throws Exception {
+                        if(favouriteMovieIdsEntities==null || favouriteMovieIdsEntities.isEmpty()) {
+                            resourceCallback.onResponse(Resource.error("Error/Empty favourite query response", null));;
+                        } else {
+                            List<Long> favouriteIds = new ArrayList<>();
+                            for(FavouriteMovieIdsEntity favouriteMovieIdsEntity: favouriteMovieIdsEntities) {
+                                favouriteIds.add(favouriteMovieIdsEntity.getMovieId());
+                            }
+                            resourceCallback.onResponse(Resource.success(favouriteIds));
+                        }
+                    }
+                });
+    }
+
+    @Override
+    public void checkMovieDataInDatabaseForIds(List<Long> movieIds, ResourceCallback<List<MovieResult>> callback) {
+        // Fetch movies data from DB
+        movieDao.getMovieResultsForMovieIds(movieIds).subscribeOn(Schedulers.io())
+                .subscribe(new Consumer<List<MovieResult>>() {
+                    @Override
+                    public void accept(List<MovieResult> movieResults) throws Exception {
+                        Log.d(TAG, "xlr8: processMovieResponse : accept: movieResults: "+movieResults);
+                        if(movieResults==null || movieResults.size()==0)
+                            callback.onResponse(Resource.error("Error Fetching Data from DB / DB is Empty", null));
+                        else callback.onResponse(Resource.success(movieResults));
+                    }
+                });
+    }
+
 
     /**********************************************     PRIVATE  HELPER   FUNCTIONS     *****************************************************************************/
 
@@ -241,7 +352,7 @@ public class MovieRepositoryImpl implements MovieRepository {
                                 }
 
                                 // Step 2.2- fetch movie of these ids only
-                                checkMovieDataInDatabaseForIds(callback, trendingMovieIds);
+                                checkMovieDataInDatabaseForIds(trendingMovieIds, callback);
                             } else {
                                 callback.onResponse(Resource.error("Error/Empty response while querying DB", null));
                             }
@@ -262,7 +373,7 @@ public class MovieRepositoryImpl implements MovieRepository {
                                 }
 
                                 // Step 2.2- fetch movie of these ids only
-                                checkMovieDataInDatabaseForIds(callback, nowPlayingMovieIds);
+                                checkMovieDataInDatabaseForIds(nowPlayingMovieIds, callback);
                             } else {
                                 callback.onResponse(Resource.error("Error/Empty response while querying DB", null));
                             }
@@ -272,17 +383,4 @@ public class MovieRepositoryImpl implements MovieRepository {
 
     }
 
-    private void checkMovieDataInDatabaseForIds(ResourceCallback callback, List<Long> movieIds) {
-        // Fetch movies data from DB
-        movieDao.getMovieResultsForMovieIds(movieIds).subscribeOn(Schedulers.io())
-                .subscribe(new Consumer<List<MovieResult>>() {
-                    @Override
-                    public void accept(List<MovieResult> movieResults) throws Exception {
-                        Log.d(TAG, "xlr8: processMovieResponse : accept: movieResults: "+movieResults);
-                        if(movieResults==null || movieResults.size()==0)
-                            callback.onResponse(Resource.error("Error Fetching Data from DB / DB is Empty", null));
-                        else callback.onResponse(Resource.success(movieResults));
-                    }
-                });
-    }
 }

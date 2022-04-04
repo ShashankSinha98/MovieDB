@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel;
 
 import com.shashank.moviedb.di.ViewModelKey;
 import com.shashank.moviedb.ui.detail.DetailViewModel;
+import com.shashank.moviedb.ui.favourites.FavouriteViewModel;
 import com.shashank.moviedb.ui.nowplaying.NowPlayingViewModel;
 import com.shashank.moviedb.ui.trending.TrendingViewModel;
 
@@ -29,4 +30,9 @@ public abstract class HomeViewModelModule {
     @IntoMap
     @ViewModelKey(DetailViewModel.class)
     abstract ViewModel bindDetailViewModel(DetailViewModel detailViewModel);
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(FavouriteViewModel.class)
+    abstract ViewModel bindFavouriteViewModel(FavouriteViewModel favouriteViewModel);
 }

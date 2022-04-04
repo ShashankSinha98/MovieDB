@@ -13,4 +13,14 @@ public interface MovieRepository {
     void fetchTrendingMovies(ResourceCallback resourceCallback);
 
     void fetchMovieDetail(Long movieId, ResourceCallback resourceCallback);
+
+    void isFavourite(long movieId, ResourceCallback<Boolean> resourceCallback);
+
+    void addFavourite(long movieId, ResourceCallback<Boolean> resourceCallback);
+
+    void removeFavourite(long movieId, ResourceCallback<Boolean> resourceCallback);
+
+    void getFavouriteMovieIds(ResourceCallback<List<Long>> resourceCallback);
+
+    void checkMovieDataInDatabaseForIds(List<Long> movieIds, ResourceCallback<List<MovieResult>> resourceCallback);
 }

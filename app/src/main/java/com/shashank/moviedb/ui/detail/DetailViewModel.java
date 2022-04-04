@@ -15,6 +15,7 @@ public class DetailViewModel extends ViewModel {
 
     private MovieRepository movieRepository;
     private MutableLiveData<Resource<MovieDetail>> _movieDetailResponse = new MutableLiveData<>();
+    private MutableLiveData<Resource<Boolean>> _favouriteIconStatus = new MutableLiveData<>();
 
 
     @Inject
@@ -29,10 +30,52 @@ public class DetailViewModel extends ViewModel {
                 _movieDetailResponse.postValue(resource);
             }
         });
+
+        validateFavouriteIcon(movieId);
+    }
+
+    private void validateFavouriteIcon(Long movieId) {
+        movieRepository.isFavourite(movieId, new ResourceCallback<Boolean>() {
+            @Override
+            public void onResponse(Resource<Boolean> resource) {
+                _favouriteIconStatus.postValue(resource);
+            }
+        });
     }
 
     public LiveData<Resource<MovieDetail>> getMovieDetailLiveData() {
         return _movieDetailResponse;
+    }
+
+    public LiveData<Resource<Boolean>> getFavouriteIconStatus() {
+        return _favouriteIconStatus;
+    }
+
+
+    private void addMovieIdToFavourite(Long movieId) {
+        movieRepository.addFavourite(movieId, new ResourceCallback<Boolean>() {
+            @Override
+            public void onResponse(Resource<Boolean> resource) {
+                _favouriteIconStatus.postValue(resource);
+            }
+        });
+    }
+
+    private void deleteMovieIdFromFavourite(Long movieId) {
+        movieRepository.removeFavourite(movieId, new ResourceCallback<Boolean>() {
+            @Override
+            public void onResponse(Resource<Boolean> resource) {
+                _favouriteIconStatus.postValue(resource);
+            }
+        });
+    }
+
+    public void updateFavourite(Long movieId) {
+        if(_favouriteIconStatus.getValue().getData()==true) {
+            deleteMovieIdFromFavourite(movieId);
+        } else {
+            addMovieIdToFavourite(movieId);
+        }
     }
 
 
