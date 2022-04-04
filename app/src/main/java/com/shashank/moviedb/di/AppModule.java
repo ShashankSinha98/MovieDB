@@ -2,10 +2,14 @@ package com.shashank.moviedb.di;
 
 import android.app.Application;
 
+import androidx.room.Room;
+
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.RequestManager;
 import com.bumptech.glide.request.RequestOptions;
 import com.shashank.moviedb.R;
+import com.shashank.moviedb.data.local.MovieDao;
+import com.shashank.moviedb.data.local.MovieDatabase;
 import com.shashank.moviedb.data.remote.MovieApi;
 import com.shashank.moviedb.data.remote.MovieRepository;
 import com.shashank.moviedb.data.remote.MovieRepositoryImpl;
@@ -53,8 +57,8 @@ public class AppModule {
 
     @Singleton
     @Provides
-    public static MovieRepository provideMovieRepository(MovieApi movieApi) {
-        return new MovieRepositoryImpl(movieApi);
+    public static MovieRepository provideMovieRepository(MovieApi movieApi, MovieDao movieDao) {
+        return new MovieRepositoryImpl(movieApi, movieDao);
     }
 
     // TODO: set placeholder later
@@ -70,5 +74,22 @@ public class AppModule {
     public static RequestManager provideGlideInstance(Application application, RequestOptions requestOptions) {
         return Glide.with(application).setDefaultRequestOptions(requestOptions);
     }
+
+
+    @Singleton
+    @Provides
+    public static synchronized MovieDatabase provideMovieDatabase(Application application) {
+        return Room.databaseBuilder(application,
+                MovieDatabase.class, "movie_database")
+                .build();
+    }
+
+
+    @Singleton
+    @Provides
+    public static MovieDao provideMovieDao(MovieDatabase movieDatabase) {
+        return movieDatabase.getMovieDao();
+    }
+
 
 }

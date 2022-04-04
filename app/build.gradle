@@ -46,6 +46,7 @@ dependencies {
     def nav_version = '2.2.2'
     def glideVersion = '4.8.0'
     def androidxVersion = '1.0.0'
+    def roomVersion = "2.3.0"
 
     implementation 'androidx.appcompat:appcompat:1.4.1'
     implementation 'com.google.android.material:material:1.5.0'
@@ -92,4 +93,12 @@ dependencies {
     annotationProcessor "com.github.bumptech.glide:compiler:$glideVersion"
 
     implementation 'com.airbnb.android:lottie:3.4.0'
+
+    // Room
+    implementation "androidx.room:room-runtime:$roomVersion"
+    annotationProcessor "androidx.room:room-compiler:$roomVersion"
+
+    // RxJava support for Room
+    //implementation "android.arch.persistence.room:rxjava2:1.0.0-alpha5"
+    implementation 'androidx.room:room-rxjava2:2.2.2'
 }

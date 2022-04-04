@@ -93,7 +93,7 @@ public class TrendingFragment extends DaggerFragment implements MovieOnClickList
                         swipeRefreshLayout.setRefreshing(false);
                         movieRecyclerView.setVisibility(View.VISIBLE);
                         noInternetView.update(Status.SUCCESS, null);
-                        List<MovieResult> movies = ((MovieResponse)listResource.getData()).getResults();
+                        List<MovieResult> movies = listResource.getData();
                         if(movies!=null && !movies.isEmpty()){
                             movieRecyclerAdapter.setMovies(movies);
                         }

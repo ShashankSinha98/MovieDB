@@ -2,16 +2,31 @@ package com.shashank.moviedb.model;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.room.ColumnInfo;
+import androidx.room.Entity;
+import androidx.room.PrimaryKey;
 
 import com.google.gson.annotations.SerializedName;
 
+@Entity(tableName = "movies")
 public class MovieResult {
 
+    @PrimaryKey(autoGenerate = true)
     @NonNull private Long id;
+
+    @ColumnInfo(name = "original_title")
     @NonNull @SerializedName("original_title") private String originalTitle;
+
+    @ColumnInfo(name = "title")
     @NonNull private String title;
+
+    @ColumnInfo(name = "poster_path")
     @Nullable @SerializedName("poster_path") private String posterPath;
+
+    @ColumnInfo(name = "backdrop_path")
     @Nullable @SerializedName("backdrop_path") private String backdropPath;
+
+    @ColumnInfo(name = "vote_average")
     @Nullable @SerializedName("vote_average") private Double voteAverage;
 
     public MovieResult() { }

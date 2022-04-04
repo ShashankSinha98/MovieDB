@@ -75,7 +75,7 @@ public class DetailFragment extends DaggerFragment {
                         MovieDetail movieDetail = ((MovieDetail)movieDetailResource.getData());
                         updateLayoutWithMovieData(movieDetail);
                         break;
-                }
+                } 
             }
         });
     }
@@ -84,6 +84,7 @@ public class DetailFragment extends DaggerFragment {
         Log.d(TAG,"xlr8: movieDetail: "+movieDetail);
         detailLayout.setVisibility(View.VISIBLE);
         tvMovieTitle.setText(movieDetail.getTitle());
+        tvMovieTitle.setSelected(true);
         tvVoteAverage.setText(movieDetail.getVoteAverage().toString());
         tvDuration.setText(getDurationString(movieDetail.getRuntime()));
         tvGenre.setText(getGenreString(movieDetail.getGenres()));
