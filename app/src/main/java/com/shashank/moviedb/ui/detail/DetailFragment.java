@@ -1,5 +1,6 @@
 package com.shashank.moviedb.ui.detail;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
@@ -13,6 +14,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.AppCompatImageView;
 import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.core.app.ShareCompat;
 import androidx.core.widget.NestedScrollView;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
@@ -39,7 +41,7 @@ import dagger.android.support.DaggerFragment;
 public class DetailFragment extends DaggerFragment implements View.OnClickListener {
 
     private static final String TAG = "DetailFragment";
-    private AppCompatImageView ivBackdrop, ivPoster, ivFavorite, noInternetIcon;
+    private AppCompatImageView ivBackdrop, ivPoster, ivFavorite, noInternetIcon, shareIcon;
     private ProgressBar progressBar;
     private TextView tvMovieTitle, tvVoteAverage, tvDuration, tvGenre, tvDescription, tvQuote, tvDescriptionTitle, tvCastTitle, tvTaglineTitle;
     private RecyclerView castRecyclerView;
@@ -220,9 +222,9 @@ public class DetailFragment extends DaggerFragment implements View.OnClickListen
         progressBar = view.findViewById(R.id.progress_bar);
         noInternetIcon = view.findViewById(R.id.no_internet_cloud_icon);
         nestedScrollView = view.findViewById(R.id.nestedDetail);
+        shareIcon = view.findViewById(R.id.ivShareIcon);
 
-
-
+        shareIcon.setOnClickListener(this);
         ivFavorite.setOnClickListener(this);
     }
 
@@ -233,8 +235,30 @@ public class DetailFragment extends DaggerFragment implements View.OnClickListen
 
     @Override
     public void onClick(View view) {
-        if(view.getId()==R.id.ivFavorite) {
-            detailViewModel.updateFavourite(movieId);
+
+        switch (view.getId()) {
+            case R.id.ivFavorite:
+                detailViewModel.updateFavourite(movieId);
+                break;
+
+            case R.id.ivShareIcon:
+                shareMovieDeepLink(movieId);
+                break;
+        }
+    }
+
+    private void shareMovieDeepLink(Long movieId) {
+        if(movieId==null) return;
+
+        String link = Constants.DEEP_LINK_TEMPLATE + movieId;
+        String msg = Constants.DEEP_LINK_MSG + link;
+        Intent shareIntent = ShareCompat.IntentBuilder.from(getActivity())
+                .setType("text/plain")
+                .setText(msg)
+                .getIntent();
+
+        if (shareIntent.resolveActivity(getActivity().getPackageManager()) != null) {
+            startActivity(shareIntent);
         }
     }
 

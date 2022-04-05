@@ -10,7 +10,7 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/clDetail"
-        android:visibility="gone"
+        android:visibility="visible"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
@@ -18,7 +18,7 @@
             android:id="@+id/progress_bar"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:visibility="gone"
+            android:visibility="visible"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
@@ -52,15 +52,37 @@
                 android:scaleType="centerCrop"
                 tools:src="@drawable/dummy_backdrop"/>
 
-            <androidx.appcompat.widget.AppCompatImageView
-                android:id="@+id/ivFavorite"
-                android:layout_width="34dp"
-                android:layout_height="34dp"
-                android:layout_margin="16dp"
-                android:layout_gravity="end|top"
-                android:tint="@color/colorAccent"
-                android:background="@drawable/shape_circle"
-                android:src="@drawable/ic_favorite_border_black_24dp" />
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_gravity="end|top">
+
+                <androidx.appcompat.widget.AppCompatImageView
+                    android:id="@+id/ivFavorite"
+                    android:layout_width="34dp"
+                    android:layout_height="34dp"
+                    android:layout_marginTop="16dp"
+                    android:layout_marginRight="16dp"
+                    android:layout_gravity="end|top"
+                    android:tint="@color/colorAccent"
+                    android:background="@drawable/shape_circle"
+                    android:src="@drawable/ic_favorite_border_black_24dp" />
+
+                <androidx.appcompat.widget.AppCompatImageView
+                    android:id="@+id/ivShareIcon"
+                    android:layout_width="34dp"
+                    android:layout_height="34dp"
+                    android:layout_gravity="end|top"
+                    android:tint="@color/White_100"
+                    android:layout_marginTop="16dp"
+                    android:background="@drawable/shape_circle"
+                    android:layout_marginRight="16dp"
+                    android:src="@drawable/ic_baseline_share_24"
+                    />
+
+            </LinearLayout>
+
 
         </FrameLayout>
 

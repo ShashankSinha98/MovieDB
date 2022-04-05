@@ -3,6 +3,8 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/Android/Projects/MovieDB/app/src/main/res/drawable-v24/ic_launcher_foreground.xml" value="0.20833333333333334" />
+        <entry key="..\:/Android/Projects/MovieDB/app/src/main/res/drawable/bg_gradient.xml" value="0.20833333333333334" />
         <entry key="..\:/Android/Projects/MovieDB/app/src/main/res/drawable/ic_cloud_off_black_24dp.xml" value="0.20833333333333334" />
         <entry key="..\:/Android/Projects/MovieDB/app/src/main/res/drawable/ic_favorite_black_24dp.xml" value="0.20833333333333334" />
         <entry key="..\:/Android/Projects/MovieDB/app/src/main/res/drawable/ic_favorite_border_black_24dp.xml" value="0.20833333333333334" />

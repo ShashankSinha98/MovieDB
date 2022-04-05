@@ -1,5 +1,7 @@
 package com.shashank.moviedb.ui;
 
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
@@ -60,6 +62,10 @@ public class HomeActivity extends DaggerAppCompatActivity implements NavControll
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
         initNavigation();
+
+        /*Intent intent = getIntent();
+        Uri data = intent.getData();*/
+
     }
 
     private void initNavigation() {

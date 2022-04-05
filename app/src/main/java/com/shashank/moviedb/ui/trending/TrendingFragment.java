@@ -1,6 +1,9 @@
 package com.shashank.moviedb.ui.trending;
 
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -66,8 +69,28 @@ public class TrendingFragment extends DaggerFragment implements MovieOnClickList
 
         trendingViewModel = new ViewModelProvider(this, providerFactory).get(TrendingViewModel.class);
 
+        Intent intent = getActivity().getIntent();
+        Uri uri = intent.getData();
+        Log.d(TAG, "xlr8: uri: "+uri);
+
         initUI();
         initObservers();
+        checkForDeepLink(getActivity().getIntent());
+    }
+
+    private void checkForDeepLink(Intent intent) {
+        Uri uri = intent.getData();
+        if(uri!=null) {
+            int stIdx = uri.toString().indexOf("=");
+            Long movieId = Long.valueOf(uri.toString().substring(stIdx+1));
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    onMovieClick(movieId);
+                    intent.setData(null);
+                }
+            },250);
+        }
     }
 
 

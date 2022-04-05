@@ -19,6 +19,8 @@ public abstract class Constants {
     public static final String BASE_IMAGE_URL_w500_API = "https://image.tmdb.org/t/p/w500/";
     public static final String CONST_EXHAUSTED = "EXHAUSTED";
     public static final String CONST_DATA_NA = "Unknown";
+    public static final String DEEP_LINK_TEMPLATE = "https://www.moviedb.com/movieid=";
+    public static final String DEEP_LINK_MSG = "Hey There! Checkout this awesome movie which I absolutely loved watching.\nLink-";
     public static final Long DUMMY_NETWORK_DELAY = 1500L;
 
 

@@ -8,12 +8,5 @@
 
         <item name="android:windowBackground">@color/windowBackground</item>
 
-        <!-- Secondary brand color. -->
-        <!--<item name="colorSecondary">@color/teal_200</item>
-        <item name="colorSecondaryVariant">@color/teal_200</item>
-        <item name="colorOnSecondary">@color/black</item>
-        &lt;!&ndash; Status bar color. &ndash;&gt;
-        <item name="android:statusBarColor" tools:targetApi="l">?attr/colorPrimaryVariant</item>-->
-        <!-- Customize your theme here. -->
     </style>
 </resources>
