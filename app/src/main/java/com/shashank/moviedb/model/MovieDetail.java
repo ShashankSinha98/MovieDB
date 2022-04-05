@@ -2,28 +2,36 @@ package com.shashank.moviedb.model;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.room.ColumnInfo;
+import androidx.room.Entity;
+import androidx.room.PrimaryKey;
+import androidx.room.TypeConverter;
+import androidx.room.TypeConverters;
 
 import com.google.gson.annotations.SerializedName;
+import com.shashank.moviedb.data.local.typeconverter.MovieTypeConverter;
 
 import java.util.List;
 
+@Entity(tableName = "movie_detail")
 public class MovieDetail {
 
-    @NonNull private Integer id;
+
+    @PrimaryKey @NonNull private Long id;
     @NonNull private String title, overview;
-    @Nullable @SerializedName("poster_path") private String posterPath;
-    @Nullable @SerializedName("backdrop_path") private String backdropPath;
-    @Nullable @SerializedName("vote_average") private Double voteAverage;
+    @ColumnInfo(name="poster_path") @Nullable @SerializedName("poster_path") private String posterPath;
+    @ColumnInfo(name="backdrop_path") @Nullable @SerializedName("backdrop_path") private String backdropPath;
+    @ColumnInfo(name="vote_average") @Nullable @SerializedName("vote_average") private Double voteAverage;
     @Nullable private Integer runtime;
-    @Nullable private Credits credits;
-    @Nullable private List<Genre> genres;
+    @TypeConverters(MovieTypeConverter.class) @Nullable private Credits credits;
+    @TypeConverters(MovieTypeConverter.class) @Nullable private List<Genre> genres;
     @Nullable private String tagline;
 
 
 
     public MovieDetail() {}
 
-    public MovieDetail(@NonNull Integer id, @NonNull String title, @NonNull String overview,
+    public MovieDetail(@NonNull Long id, @NonNull String title, @NonNull String overview,
                        @Nullable String posterPath, @Nullable String backdropPath, @Nullable Double voteAverage, @Nullable Integer runtime, @Nullable Credits credits, @Nullable List<Genre> genres, @Nullable String tagline) {
         this.id = id;
         this.title = title;
@@ -38,11 +46,11 @@ public class MovieDetail {
     }
 
     @NonNull
-    public Integer getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(@NonNull Integer id) {
+    public void setId(@NonNull Long id) {
         this.id = id;
     }
 

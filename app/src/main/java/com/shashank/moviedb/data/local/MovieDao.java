@@ -7,6 +7,7 @@ import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
 
 import com.shashank.moviedb.data.local.entity.FavouriteMovieIdsEntity;
+import com.shashank.moviedb.model.MovieDetail;
 import com.shashank.moviedb.model.MovieResult;
 import com.shashank.moviedb.data.local.entity.NowPlayingMovieIdsEntity;
 import com.shashank.moviedb.data.local.entity.TrendingMovieIdsEntity;
@@ -50,5 +51,11 @@ public interface MovieDao {
 
     @Query("SELECT * FROM favourite_movie_ids")
     Flowable<List<FavouriteMovieIdsEntity>> getFavouriteMovieIdsEntities();
+
+    @Insert
+    void insertMovieDetail(MovieDetail movieDetail);
+
+    @Query("SELECT * FROM movie_detail WHERE id=:movieId")
+    Flowable<MovieDetail> getMovieDetailForMovieId(Long movieId);
 
 }

@@ -32,6 +32,9 @@ import io.reactivex.functions.Action;
 import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
 
+// Data is sent to ViewModel via callback (@ResourceCallback)
+// Following Single source of truth principle
+
 public class MovieRepositoryImpl implements MovieRepository {
 
     private static final String TAG = "MovieRepositoryImpl";
@@ -111,7 +114,6 @@ public class MovieRepositoryImpl implements MovieRepository {
                     @Override
                     public void onError(@NonNull Throwable e) {
                         Log.d(TAG, "xlr8: fetchTrendingMovies - onError: e: "+e.getMessage());
-                        //resourceCallback.onResponse(Resource.error(e.getMessage(), null));
                         checkMovieDataInDatabase(resourceCallback, STATUS_TRENDING);
                     }
 
@@ -143,13 +145,17 @@ public class MovieRepositoryImpl implements MovieRepository {
                     @Override
                     public void onNext(@NonNull MovieDetail movieDetail) {
                         Log.d(TAG,"fetchMovieDetail - onNext: movieDetail: "+movieDetail);
-                        resourceCallback.onResponse(Resource.success(movieDetail));
+                        try {
+                            processMovieDetailResponse(movieDetail, resourceCallback);
+                        } catch (Exception e) {
+                            resourceCallback.onResponse(Resource.error(e.getMessage(), null));
+                        }
                     }
 
                     @Override
                     public void onError(@NonNull Throwable e) {
                         Log.d(TAG, "fetchMovieDetail - onError: e: "+e.getMessage());
-                        resourceCallback.onResponse(Resource.error(e.getMessage(), null));
+                        checkMovieDetailDataInDatabase(movieId, resourceCallback);
                     }
 
                     @Override
@@ -270,6 +276,20 @@ public class MovieRepositoryImpl implements MovieRepository {
     }
 
 
+
+    // Movie Detail
+
+    @Override
+    public void addMovieDetail(MovieDetail movieDetail, ResourceCallback<Boolean> resourceCallback) {
+
+    }
+
+    @Override
+    public void getMovieDetail(long movieId, ResourceCallback<MovieDetail> resourceCallback) {
+
+    }
+
+
     /**********************************************     PRIVATE  HELPER   FUNCTIONS     *****************************************************************************/
 
     // Save remote data in room db, read data from db and then pass it to callback
@@ -317,6 +337,7 @@ public class MovieRepositoryImpl implements MovieRepository {
             }
         });
     }
+
 
     private void insertMovieIdsIntoRespectiveEntity(List<MovieResult> movies, int movieStatus) {
         if(movieStatus== STATUS_NOW_PLAYING) {
@@ -383,4 +404,58 @@ public class MovieRepositoryImpl implements MovieRepository {
 
     }
 
+    private void processMovieDetailResponse(MovieDetail movieDetail, ResourceCallback callback) throws Exception {
+        Log.d(TAG, "xlr8:processMovieDetailResponse called: movieDetail: "+movieDetail);
+
+        if(movieDetail==null) {
+            callback.onResponse(Resource.error("Null Movie Detail response", null));
+            return;
+        }
+
+        // Step 1- Insert into Movie Detail Table
+        Completable.fromAction(new Action() {
+            @Override
+            public void run() throws Exception {
+                movieDao.insertMovieDetail(movieDetail);
+            }
+        }).subscribeOn(Schedulers.computation())
+                .subscribe(new CompletableObserver() {
+                    @Override
+                    public void onSubscribe(@NonNull Disposable d) {
+
+                    }
+
+                    @Override
+                    public void onComplete() {
+                        Log.d(TAG, "xlr8:processMovieDetailResponse onComplete");
+                        // Movie Detail inserted in DB
+
+                        // Step 2- Fetch data from DB
+                        checkMovieDetailDataInDatabase(movieDetail.getId(), callback);
+                    }
+
+                    @Override
+                    public void onError(@NonNull Throwable e) {
+                        Log.d(TAG, "xlr8:processMovieDetailResponse onError");
+                        callback.onResponse(Resource.error("Error inserting Movie Detail data in DB", null));
+                    }
+                });
+    }
+
+
+    private void checkMovieDetailDataInDatabase(Long movieId, ResourceCallback callback) {
+        Log.d(TAG, "xlr8: checkMovieDetailDataInDatabase called, movieId: "+movieId);
+        movieDao.getMovieDetailForMovieId(movieId)
+                .subscribeOn(Schedulers.computation())
+                .subscribe(new Consumer<MovieDetail>() {
+                    @Override
+                    public void accept(MovieDetail movieDetail) throws Exception {
+                        if(movieDetail!=null) {
+                            callback.onResponse(Resource.success(movieDetail));
+                        } else {
+                            callback.onResponse(Resource.error("Null Movie Detail Query Response", null));
+                        }
+                    }
+                });
+    }
 }

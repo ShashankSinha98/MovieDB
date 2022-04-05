@@ -2,6 +2,7 @@ package com.shashank.moviedb.data.remote;
 
 import com.shashank.moviedb.data.ResourceCallback;
 import com.shashank.moviedb.data.Resource;
+import com.shashank.moviedb.model.MovieDetail;
 import com.shashank.moviedb.model.MovieResult;
 
 import java.util.List;
@@ -23,4 +24,8 @@ public interface MovieRepository {
     void getFavouriteMovieIds(ResourceCallback<List<Long>> resourceCallback);
 
     void checkMovieDataInDatabaseForIds(List<Long> movieIds, ResourceCallback<List<MovieResult>> resourceCallback);
+
+    void addMovieDetail(MovieDetail movieDetail, ResourceCallback<Boolean> resourceCallback);
+
+    void getMovieDetail(long movieId, ResourceCallback<MovieDetail> resourceCallback);
 }
