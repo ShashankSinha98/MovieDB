@@ -57,6 +57,7 @@
         android:background="@drawable/shape_splash"
         android:fitsSystemWindows="true"
         app:menu="@menu/home_menu"
+        app:headerLayout="@layout/nav_header_home"
         app:itemTextColor="@drawable/selector_navigation_drawer"
         app:itemBackground="@android:color/transparent"
         app:itemIconTint="@drawable/selector_navigation_drawer"

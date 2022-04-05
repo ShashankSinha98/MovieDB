@@ -7,14 +7,17 @@
 
         <item
             android:id="@+id/nav_trending"
+            android:icon="@drawable/ic_award"
             android:title="@string/trending"/>
 
         <item
             android:id="@+id/nav_now_playing"
+            android:icon="@drawable/ic_ticket"
             android:title="@string/now_playing"/>
 
         <item
             android:id="@+id/nav_favourite"
+            android:icon="@drawable/ic_star_border_black_24dp"
             android:title="@string/favourites"/>
 
 
