@@ -93,6 +93,7 @@ public class HomeActivity extends DaggerAppCompatActivity implements NavControll
             case R.id.nav_trending:
             case R.id.nav_now_playing:
             case R.id.nav_favourite:
+
                 toolbar.setVisibility(View.VISIBLE);
                 toolbarTextView.setText(destination.getLabel());
                 break;

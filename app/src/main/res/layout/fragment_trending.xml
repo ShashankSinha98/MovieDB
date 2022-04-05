@@ -24,8 +24,8 @@
 
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
-    <com.shashank.moviedb.view.customview.NoInternetView
-        android:id="@+id/noInternetView"
+    <com.shashank.moviedb.view.customview.EmptyView
+        android:id="@+id/emptyView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:layout_constraintBottom_toBottomOf="parent"

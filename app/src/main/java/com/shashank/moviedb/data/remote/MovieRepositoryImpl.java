@@ -241,8 +241,8 @@ public class MovieRepositoryImpl implements MovieRepository {
                 .subscribe(new Consumer<List<FavouriteMovieIdsEntity>>() {
                     @Override
                     public void accept(List<FavouriteMovieIdsEntity> favouriteMovieIdsEntities) throws Exception {
-                        if(favouriteMovieIdsEntities==null || favouriteMovieIdsEntities.isEmpty()) {
-                            resourceCallback.onResponse(Resource.error("Error/Empty favourite query response", null));;
+                        if(favouriteMovieIdsEntities==null) {
+                            resourceCallback.onResponse(Resource.error("Error favourite query response", null));;
                         } else {
                             List<Long> favouriteIds = new ArrayList<>();
                             for(FavouriteMovieIdsEntity favouriteMovieIdsEntity: favouriteMovieIdsEntities) {
@@ -262,7 +262,7 @@ public class MovieRepositoryImpl implements MovieRepository {
                     @Override
                     public void accept(List<MovieResult> movieResults) throws Exception {
                         Log.d(TAG, "xlr8: processMovieResponse : accept: movieResults: "+movieResults);
-                        if(movieResults==null || movieResults.size()==0)
+                        if(movieResults==null)
                             callback.onResponse(Resource.error("Error Fetching Data from DB / DB is Empty", null));
                         else callback.onResponse(Resource.success(movieResults));
                     }

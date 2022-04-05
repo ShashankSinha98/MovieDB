@@ -1,7 +1,6 @@
 package com.shashank.moviedb.ui.favourites;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,19 +12,17 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.bumptech.glide.RequestManager;
 import com.shashank.moviedb.R;
 import com.shashank.moviedb.common.MovieOnClickListener;
 import com.shashank.moviedb.common.ViewModelProviderFactory;
 import com.shashank.moviedb.data.Resource;
+import com.shashank.moviedb.data.Status;
 import com.shashank.moviedb.data.remote.MovieRepository;
 import com.shashank.moviedb.model.MovieResult;
-import com.shashank.moviedb.ui.nowplaying.NowPlayingFragmentDirections;
-import com.shashank.moviedb.ui.nowplaying.NowPlayingViewModel;
 import com.shashank.moviedb.ui.trending.adapter.MovieRecyclerAdapter;
-import com.shashank.moviedb.view.customview.NoInternetView;
+import com.shashank.moviedb.view.customview.EmptyView;
 
 import java.util.List;
 
@@ -44,6 +41,8 @@ public class FavouriteFragment extends DaggerFragment implements MovieOnClickLis
     private RecyclerView movieRecyclerView;
     private FavouriteViewModel favouriteViewModel;
 
+    private EmptyView emptyView;
+
 
     @Nullable
     @Override
@@ -56,6 +55,7 @@ public class FavouriteFragment extends DaggerFragment implements MovieOnClickLis
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         movieRecyclerView = view.findViewById(R.id.rv_movie);
+        emptyView = view.findViewById(R.id.emptyView);
 
         favouriteViewModel = new ViewModelProvider(this, providerFactory).get(FavouriteViewModel.class);
 
@@ -70,11 +70,16 @@ public class FavouriteFragment extends DaggerFragment implements MovieOnClickLis
                 switch (listResource.getStatus()) {
 
                     case ERROR:
-                        // TODO: Hide progress bar and show error msg
+                        emptyView.updateFavourite(Status.ERROR, null, new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                favouriteViewModel.fetchFavouriteMovies();
+                            }
+                        });
                         break;
 
                     case LOADING:
-                        // TODO: show progress bar
+                        emptyView.updateFavourite(Status.LOADING, null, null);
                         break;
                 }
             }
@@ -85,18 +90,24 @@ public class FavouriteFragment extends DaggerFragment implements MovieOnClickLis
             public void onChanged(Resource<List<MovieResult>> listResource) {
                 switch (listResource.getStatus()) {
                     case SUCCESS:
-                        movieRecyclerView.setVisibility(View.VISIBLE);
+                        //movieRecyclerView.setVisibility(View.VISIBLE);
                         List<MovieResult> movies = listResource.getData();
+                        emptyView.updateFavourite(Status.SUCCESS,movies.size(), null);
                         if(movies!=null && !movies.isEmpty()){
                             movieRecyclerAdapter.setMovies(movies);
                         }
                         break;
                     case ERROR:
-                        // TODO: Hide progress bar and show error msg
+                        emptyView.updateFavourite(Status.ERROR, null, new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                favouriteViewModel.fetchFavouriteMovies();
+                            }
+                        });
                         break;
 
                     case LOADING:
-                        // TODO: show progress bar
+                        emptyView.updateFavourite(Status.LOADING, null, null);
                         break;
                 }
             }

@@ -28,7 +28,7 @@ public class FavouriteViewModel extends ViewModel  {
         fetchFavouriteMovies();
     }
 
-    private void fetchFavouriteMovies() {
+    public void fetchFavouriteMovies() {
 
         movieRepository.getFavouriteMovieIds(new ResourceCallback<List<Long>>() {
             @Override

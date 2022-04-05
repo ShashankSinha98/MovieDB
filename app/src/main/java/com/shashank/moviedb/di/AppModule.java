@@ -8,6 +8,7 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.RequestManager;
 import com.bumptech.glide.request.RequestOptions;
 import com.shashank.moviedb.R;
+import com.shashank.moviedb.common.NetworkHelper;
 import com.shashank.moviedb.data.local.MovieDao;
 import com.shashank.moviedb.data.local.MovieDatabase;
 import com.shashank.moviedb.data.remote.MovieApi;
@@ -17,6 +18,7 @@ import com.shashank.moviedb.util.Constants;
 
 import java.util.concurrent.TimeUnit;
 
+import javax.inject.Named;
 import javax.inject.Singleton;
 
 import dagger.Module;
@@ -90,6 +92,20 @@ public class AppModule {
     public static MovieDao provideMovieDao(MovieDatabase movieDatabase) {
         return movieDatabase.getMovieDao();
     }
+
+    @Singleton
+    @Provides
+    public static NetworkHelper provideNetworkHelper(Application application) {
+        return new NetworkHelper(application);
+    }
+
+    @Singleton
+    @Provides
+    @Named("network_status")
+    public static Boolean isNetworkAvailable(NetworkHelper networkHelper) {
+        return networkHelper.isNetworkConnected();
+    }
+
 
 
 }

@@ -5,7 +5,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -23,16 +22,15 @@ import com.shashank.moviedb.common.ViewModelProviderFactory;
 import com.shashank.moviedb.data.Resource;
 import com.shashank.moviedb.data.Status;
 import com.shashank.moviedb.data.remote.MovieRepository;
-import com.shashank.moviedb.model.MovieResponse;
 import com.shashank.moviedb.model.MovieResult;
 import com.shashank.moviedb.ui.trending.TrendingFragmentDirections.ActionNavTrendingToDetailFragment;
 import com.shashank.moviedb.ui.trending.adapter.MovieRecyclerAdapter;
-import com.shashank.moviedb.util.Constants;
-import com.shashank.moviedb.view.customview.NoInternetView;
+import com.shashank.moviedb.view.customview.EmptyView;
 
 import java.util.List;
 
 import javax.inject.Inject;
+import javax.inject.Named;
 
 import dagger.android.support.DaggerFragment;
 
@@ -47,7 +45,10 @@ public class TrendingFragment extends DaggerFragment implements MovieOnClickList
     private RecyclerView movieRecyclerView;
     private TrendingViewModel trendingViewModel;
     private SwipeRefreshLayout swipeRefreshLayout;
-    private NoInternetView noInternetView;
+    private EmptyView emptyView;
+
+
+    @Inject @Named("network_status") public Boolean isNetworkAvailable;
 
     @Nullable
     @Override
@@ -61,7 +62,7 @@ public class TrendingFragment extends DaggerFragment implements MovieOnClickList
         super.onViewCreated(view, savedInstanceState);
         movieRecyclerView = view.findViewById(R.id.rv_movie);
         swipeRefreshLayout = view.findViewById(R.id.swipe);
-        noInternetView = view.findViewById(R.id.noInternetView);
+        emptyView = view.findViewById(R.id.emptyView);
 
         trendingViewModel = new ViewModelProvider(this, providerFactory).get(TrendingViewModel.class);
 
@@ -85,14 +86,16 @@ public class TrendingFragment extends DaggerFragment implements MovieOnClickList
                 switch (listResource.getStatus()) {
                     case LOADING:
                         Log.d(TAG, "xlr8: initObservers : LOADING");
-                        swipeRefreshLayout.setRefreshing(true);
+                        swipeRefreshLayout.setRefreshing(false);
+                        movieRecyclerView.setVisibility(View.GONE);
+                        emptyView.update(Status.LOADING, isNetworkAvailable,null);
                         break;
 
                     case SUCCESS:
                         Log.d(TAG, "xlr8: initObservers : SUCCESS");
                         swipeRefreshLayout.setRefreshing(false);
                         movieRecyclerView.setVisibility(View.VISIBLE);
-                        noInternetView.update(Status.SUCCESS, null);
+                        emptyView.update(Status.SUCCESS, isNetworkAvailable,null);
                         List<MovieResult> movies = listResource.getData();
                         if(movies!=null && !movies.isEmpty()){
                             movieRecyclerAdapter.setMovies(movies);
@@ -104,7 +107,7 @@ public class TrendingFragment extends DaggerFragment implements MovieOnClickList
                         swipeRefreshLayout.setRefreshing(false);
                         movieRecyclerView.setVisibility(View.GONE);
                         // TODO: check if error is of internet connection or something else
-                        noInternetView.update(Status.ERROR, new View.OnClickListener() {
+                        emptyView.update(Status.ERROR, isNetworkAvailable, new View.OnClickListener() {
                             @Override
                             public void onClick(View view) {
                                 onRefresh();
