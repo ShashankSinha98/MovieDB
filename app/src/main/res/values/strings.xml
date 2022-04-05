@@ -9,4 +9,9 @@
     <string name="oops">Ooopss!!</string>
     <string name="check_network_connection">Please check your Internet Connection</string>
     <string name="retry">Retry</string>
+    <string name="no_internet">No Internet</string>
+    <string name="no_internet_desc">Please check your Internet Connection</string>
+    <string name="error_msg">Something went wrong. Please take dumpstate.</string>
+    <string name="no_favourite">No Favourites</string>
+    <string name="no_fav_msg">Binge watch new Movies and add them as Favourites.</string>
 </resources>

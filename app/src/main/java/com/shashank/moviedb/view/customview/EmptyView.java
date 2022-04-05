@@ -12,7 +12,6 @@ import androidx.appcompat.widget.AppCompatButton;
 import androidx.constraintlayout.widget.ConstraintLayout;
 
 import com.airbnb.lottie.LottieAnimationView;
-import com.shashank.moviedb.BaseApplication;
 import com.shashank.moviedb.R;
 import com.shashank.moviedb.data.Status;
 
@@ -49,7 +48,7 @@ public class EmptyView extends ConstraintLayout {
         switch (status) {
 
             case LOADING:
-                setUpLottieAnimFile(LOTTIE_ANIM_LOADING);
+                setUpLottieAnimFileAndMessage(LOTTIE_ANIM_LOADING);
                 showAnimationOnly(true);
                 showRootView(true);
                 break;
@@ -57,9 +56,9 @@ public class EmptyView extends ConstraintLayout {
 
             case ERROR:
                 if(isNetworkAvail)
-                    setUpLottieAnimFile(LOTTIE_ANIM_ERROR);
+                    setUpLottieAnimFileAndMessage(LOTTIE_ANIM_ERROR);
                 else
-                    setUpLottieAnimFile(LOTTIE_ANIM_NO_INTERNET);
+                    setUpLottieAnimFileAndMessage(LOTTIE_ANIM_NO_INTERNET);
                 showRootView(true);
                 showAnimationOnly(false);
                 btnretry.setOnClickListener(listener);
@@ -77,14 +76,14 @@ public class EmptyView extends ConstraintLayout {
         switch (status) {
 
             case LOADING:
-                setUpLottieAnimFile(LOTTIE_ANIM_LOADING);
+                setUpLottieAnimFileAndMessage(LOTTIE_ANIM_LOADING);
                 showAnimationOnly(true);
                 showRootView(true);
                 break;
 
 
             case ERROR:
-                setUpLottieAnimFile(LOTTIE_ANIM_ERROR);
+                setUpLottieAnimFileAndMessage(LOTTIE_ANIM_ERROR);
                 showRootView(true);
                 showAnimationOnly(false);
                 btnretry.setOnClickListener(listener);
@@ -93,7 +92,7 @@ public class EmptyView extends ConstraintLayout {
             case SUCCESS:
                 if(favouriteCount==0) {
                     showRootView(true);
-                    setUpLottieAnimFile(LOTTIE_ANIM_NO_FAVOURITE);
+                    setUpLottieAnimFileAndMessage(LOTTIE_ANIM_NO_FAVOURITE);
                     showAnimationOnly(false);
                     showRetryButton(false);
                 } else {
@@ -104,11 +103,13 @@ public class EmptyView extends ConstraintLayout {
     }
 
 
-    private void setUpLottieAnimFile(int animType) {
+    private void setUpLottieAnimFileAndMessage(int animType) {
         try {
             switch (animType) {
                 case LOTTIE_ANIM_NO_INTERNET:
                     animationView.setAnimation("no_internet_1.json");
+                    tvTitle.setText(R.string.no_internet);
+                    tvDesc.setText(R.string.no_internet_desc);
                     break;
 
                 case LOTTIE_ANIM_LOADING:
@@ -117,10 +118,14 @@ public class EmptyView extends ConstraintLayout {
 
                 case LOTTIE_ANIM_ERROR:
                     animationView.setAnimation("error_anim_1.json");
+                    tvTitle.setText(R.string.oops);
+                    tvDesc.setText(R.string.error_msg);
                     break;
 
                 case LOTTIE_ANIM_NO_FAVOURITE:
                     animationView.setAnimation("watch_a_movie_with_popcorn.json");
+                    tvTitle.setText(R.string.no_favourite);
+                    tvDesc.setText(R.string.no_fav_msg);
                     break;
 
             }
