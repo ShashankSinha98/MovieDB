@@ -437,7 +437,7 @@ public class MovieRepositoryImpl implements MovieRepository {
 
                     @Override
                     public void onError(@NonNull Throwable e) {
-                        Log.d(TAG, "xlr8:processMovieDetailResponse onError");
+                        Log.d(TAG, "xlr8:processMovieDetailResponse onError: e: "+e.getMessage());
                         callback.onResponse(Resource.error("Error inserting Movie Detail data in DB", null));
                     }
                 });

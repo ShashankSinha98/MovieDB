@@ -52,7 +52,7 @@ public interface MovieDao {
     @Query("SELECT * FROM favourite_movie_ids")
     Flowable<List<FavouriteMovieIdsEntity>> getFavouriteMovieIdsEntities();
 
-    @Insert
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insertMovieDetail(MovieDetail movieDetail);
 
     @Query("SELECT * FROM movie_detail WHERE id=:movieId")
