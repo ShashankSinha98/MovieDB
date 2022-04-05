@@ -14,6 +14,28 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
+        <ProgressBar
+            android:id="@+id/progress_bar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"/>
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/no_internet_cloud_icon"
+            android:layout_width="150dp"
+            android:layout_height="150dp"
+            android:tint="@color/White_100"
+            android:visibility="gone"
+            android:src="@drawable/ic_cloud_off_black_24dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"/>
+
         <FrameLayout
             android:id="@+id/flBackdrop"
             android:layout_width="0dp"
@@ -208,7 +230,7 @@
                 app:layout_constraintTop_toBottomOf="@+id/tvTaglineTitle" />
 
             <TextView
-                android:id="@+id/tvActorsTitle"
+                android:id="@+id/tvCastTitle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
@@ -230,13 +252,12 @@
                 android:paddingEnd="8dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/tvActorsTitle"
+                app:layout_constraintTop_toBottomOf="@+id/tvCastTitle"
                 tools:listitem="@layout/cast_view_layout"
                 tools:orientation="horizontal" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
-
 
 </androidx.core.widget.NestedScrollView>

@@ -1,20 +1,30 @@
 package com.shashank.moviedb.ui.detail;
 
+import android.util.Log;
+
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.shashank.moviedb.data.Resource;
 import com.shashank.moviedb.data.ResourceCallback;
+import com.shashank.moviedb.data.Status;
 import com.shashank.moviedb.data.remote.MovieRepository;
 import com.shashank.moviedb.model.MovieDetail;
+import com.shashank.moviedb.model.MovieResult;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.inject.Inject;
 
 public class DetailViewModel extends ViewModel {
 
+    private static final String TAG = "DetailViewModel";
+
     private MovieRepository movieRepository;
     private MutableLiveData<Resource<MovieDetail>> _movieDetailResponse = new MutableLiveData<>();
+    private MutableLiveData<Resource<List<MovieResult>>> _movieResultResponse = new MutableLiveData<>();
     private MutableLiveData<Resource<Boolean>> _favouriteIconStatus = new MutableLiveData<>();
 
 
@@ -27,11 +37,27 @@ public class DetailViewModel extends ViewModel {
         movieRepository.fetchMovieDetail(movieId, new ResourceCallback() {
             @Override
             public void onResponse(Resource resource) {
-                _movieDetailResponse.postValue(resource);
+                if(resource.getStatus()== Status.SUCCESS)
+                    _movieDetailResponse.postValue(resource);
+                else
+                    checkMovieDataInMovieTable(movieId);
             }
         });
 
         validateFavouriteIcon(movieId);
+    }
+
+    private void checkMovieDataInMovieTable(Long movieId) {
+        Log.d(TAG, "xlr8: checkMovieDataInMovieTable called, movieId: "+movieId);
+        List<Long> movieIds = new ArrayList<>();
+        movieIds.add(movieId);
+
+        movieRepository.checkMovieDataInDatabaseForIds(movieIds, new ResourceCallback<List<MovieResult>>() {
+            @Override
+            public void onResponse(Resource<List<MovieResult>> resource) {
+                _movieResultResponse.postValue(resource);
+            }
+        });
     }
 
     private void validateFavouriteIcon(Long movieId) {
@@ -49,6 +75,10 @@ public class DetailViewModel extends ViewModel {
 
     public LiveData<Resource<Boolean>> getFavouriteIconStatus() {
         return _favouriteIconStatus;
+    }
+
+    public LiveData<Resource<List<MovieResult>>> getMovieResultLiveData() {
+        return _movieResultResponse;
     }
 
 

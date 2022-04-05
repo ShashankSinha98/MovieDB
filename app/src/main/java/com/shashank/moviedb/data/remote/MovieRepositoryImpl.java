@@ -127,7 +127,7 @@ public class MovieRepositoryImpl implements MovieRepository {
 
     @Override
     public void fetchMovieDetail(Long movieId, ResourceCallback resourceCallback) {
-
+        Log.d(TAG, "xlr8: fetchMovieDetail: movieId: "+movieId);
         if(movieId==null || movieId<=0L) {
             resourceCallback.onResponse(Resource.error(INVALID_MOVIE_ID_ERROR_MSG,null));
             return;
@@ -139,12 +139,12 @@ public class MovieRepositoryImpl implements MovieRepository {
                 .subscribe(new Observer<MovieDetail>() {
                     @Override
                     public void onSubscribe(@NonNull Disposable d) {
-                        Log.d(TAG,"fetchMovieDetail - onSubscribe");
+                        Log.d(TAG,"xlr8: fetchMovieDetail - onSubscribe");
                     }
 
                     @Override
                     public void onNext(@NonNull MovieDetail movieDetail) {
-                        Log.d(TAG,"fetchMovieDetail - onNext: movieDetail: "+movieDetail);
+                        Log.d(TAG,"xlr8: fetchMovieDetail - onNext: movieDetail: "+movieDetail);
                         try {
                             processMovieDetailResponse(movieDetail, resourceCallback);
                         } catch (Exception e) {
@@ -154,13 +154,13 @@ public class MovieRepositoryImpl implements MovieRepository {
 
                     @Override
                     public void onError(@NonNull Throwable e) {
-                        Log.d(TAG, "fetchMovieDetail - onError: e: "+e.getMessage());
+                        Log.d(TAG, "xlr8: fetchMovieDetail - onError: e: "+e.getMessage());
                         checkMovieDetailDataInDatabase(movieId, resourceCallback);
                     }
 
                     @Override
                     public void onComplete() {
-                        Log.d(TAG, "fetchMovieDetail - onComplete");
+                        Log.d(TAG, "xlr8: fetchMovieDetail - onComplete");
                     }
                 });
     }
@@ -262,6 +262,7 @@ public class MovieRepositoryImpl implements MovieRepository {
 
     @Override
     public void checkMovieDataInDatabaseForIds(List<Long> movieIds, ResourceCallback<List<MovieResult>> callback) {
+        Log.d(TAG, "xlr8: checkMovieDataInDatabaseForIds, movieIds: "+movieIds);
         // Fetch movies data from DB
         movieDao.getMovieResultsForMovieIds(movieIds).subscribeOn(Schedulers.io())
                 .subscribe(new Consumer<List<MovieResult>>() {
@@ -405,7 +406,7 @@ public class MovieRepositoryImpl implements MovieRepository {
     }
 
     private void processMovieDetailResponse(MovieDetail movieDetail, ResourceCallback callback) throws Exception {
-        Log.d(TAG, "xlr8:processMovieDetailResponse called: movieDetail: "+movieDetail);
+        Log.d(TAG, "xlr8: processMovieDetailResponse called: movieDetail: "+movieDetail);
 
         if(movieDetail==null) {
             callback.onResponse(Resource.error("Null Movie Detail response", null));
@@ -446,12 +447,13 @@ public class MovieRepositoryImpl implements MovieRepository {
     private void checkMovieDetailDataInDatabase(Long movieId, ResourceCallback callback) {
         Log.d(TAG, "xlr8: checkMovieDetailDataInDatabase called, movieId: "+movieId);
         movieDao.getMovieDetailForMovieId(movieId)
-                .subscribeOn(Schedulers.computation())
-                .subscribe(new Consumer<MovieDetail>() {
+                .subscribeOn(Schedulers.io())
+                .subscribe(new Consumer<List<MovieDetail>>() {
                     @Override
-                    public void accept(MovieDetail movieDetail) throws Exception {
-                        if(movieDetail!=null) {
-                            callback.onResponse(Resource.success(movieDetail));
+                    public void accept(List<MovieDetail> movieDetails) throws Exception {
+                        Log.d(TAG, "xlr8: checkMovieDetailDataInDatabase accept: movieDetail: "+movieDetails);
+                        if(movieDetails!=null && movieDetails.size()!=0) {
+                            callback.onResponse(Resource.success(movieDetails.get(0)));
                         } else {
                             callback.onResponse(Resource.error("Null Movie Detail Query Response", null));
                         }

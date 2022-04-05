@@ -56,6 +56,6 @@ public interface MovieDao {
     void insertMovieDetail(MovieDetail movieDetail);
 
     @Query("SELECT * FROM movie_detail WHERE id=:movieId")
-    Flowable<MovieDetail> getMovieDetailForMovieId(Long movieId);
+    Flowable<List<MovieDetail>> getMovieDetailForMovieId(Long movieId);
 
 }

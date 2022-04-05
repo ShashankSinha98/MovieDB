@@ -1,30 +1,33 @@
 package com.shashank.moviedb.ui.detail;
 
-import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.AppCompatImageView;
 import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.core.widget.NestedScrollView;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.RequestManager;
+import com.google.android.material.snackbar.Snackbar;
 import com.shashank.moviedb.R;
 import com.shashank.moviedb.common.ViewModelProviderFactory;
 import com.shashank.moviedb.data.Resource;
 import com.shashank.moviedb.model.Genre;
 import com.shashank.moviedb.model.MovieDetail;
+import com.shashank.moviedb.model.MovieResult;
 import com.shashank.moviedb.ui.detail.adapter.CastRecyclerAdapter;
-import com.shashank.moviedb.ui.trending.TrendingViewModel;
 import com.shashank.moviedb.util.Constants;
 
 import java.util.List;
@@ -36,10 +39,13 @@ import dagger.android.support.DaggerFragment;
 public class DetailFragment extends DaggerFragment implements View.OnClickListener {
 
     private static final String TAG = "DetailFragment";
-    private AppCompatImageView ivBackdrop, ivPoster, ivFavorite;
-    private TextView tvMovieTitle, tvVoteAverage, tvDuration, tvGenre, tvDescription, tvQuote;
+    private AppCompatImageView ivBackdrop, ivPoster, ivFavorite, noInternetIcon;
+    private ProgressBar progressBar;
+    private TextView tvMovieTitle, tvVoteAverage, tvDuration, tvGenre, tvDescription, tvQuote, tvDescriptionTitle, tvCastTitle, tvTaglineTitle;
     private RecyclerView castRecyclerView;
     private ConstraintLayout detailLayout;
+    private NestedScrollView nestedScrollView;
+    private Snackbar snackbar;
 
     @Inject public ViewModelProviderFactory providerFactory;
     @Inject public RequestManager requestManager;
@@ -73,8 +79,14 @@ public class DetailFragment extends DaggerFragment implements View.OnClickListen
             public void onChanged(Resource<MovieDetail> movieDetailResource) {
                 switch (movieDetailResource.getStatus()) {
                     case SUCCESS:
+                        showProgressBar(false);
                         MovieDetail movieDetail = ((MovieDetail)movieDetailResource.getData());
-                        updateLayoutWithMovieData(movieDetail);
+                        updateLayoutForMovieResult(View.VISIBLE);
+                        updateLayoutWithMovieDetailData(movieDetail);
+                        break;
+
+                    case LOADING:
+                        showProgressBar(true);
                         break;
                 } 
             }
@@ -91,10 +103,66 @@ public class DetailFragment extends DaggerFragment implements View.OnClickListen
                 }
             }
         });
+
+        detailViewModel.getMovieResultLiveData().observe(getViewLifecycleOwner(), new Observer<Resource<List<MovieResult>>>() {
+            @Override
+            public void onChanged(Resource<List<MovieResult>> listResource) {
+                switch (listResource.getStatus()) {
+                    case SUCCESS:
+                        Log.d(TAG, "xlr8: getMovieResultLiveData SUCCESS");
+                        showProgressBar(false);
+                        MovieResult movieResult = listResource.getData().get(0);
+                        updateLayoutForMovieResult(View.INVISIBLE);
+                        updateLayoutWithMovieResultData(movieResult);
+                        showSnackBar();
+                        break;
+
+                    case ERROR:
+                        Log.d(TAG, "xlr8: getMovieResultLiveData ERROR: e: "+listResource.getMessage());
+                        break;
+                }
+            }
+        });
+
     }
 
-    private void updateLayoutWithMovieData(MovieDetail movieDetail) {
-        Log.d(TAG,"xlr8: movieDetail: "+movieDetail);
+    private void showSnackBar() {
+         snackbar =Snackbar.make(nestedScrollView, "No Connection", Snackbar.LENGTH_INDEFINITE);
+        snackbar.setAction("Retry", new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                snackbar.dismiss();
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        detailViewModel.getMovieDetail(movieId);
+                    }
+                }, 250);
+            }
+        });
+
+        snackbar.show();
+    }
+
+    private void updateLayoutWithMovieResultData(MovieResult movieResult) {
+        Log.d(TAG,"xlr8: updateLayoutWithMovieResultData movieResult: "+movieResult);
+        detailLayout.setVisibility(View.VISIBLE);
+        tvMovieTitle.setText(movieResult.getTitle());
+        tvMovieTitle.setSelected(true);
+        tvVoteAverage.setText(movieResult.getVoteAverage().toString());
+
+        requestManager.load(Constants.BASE_IMAGE_URL_API+movieResult.getPosterPath())
+                .into(ivPoster);
+
+        requestManager.load(Constants.BASE_IMAGE_URL_w500_API+movieResult.getBackdropPath())
+                .into(ivBackdrop);
+
+    }
+
+
+
+    private void updateLayoutWithMovieDetailData(MovieDetail movieDetail) {
+        Log.d(TAG,"xlr8: updateLayoutWithMovieDetailData movieDetail: "+movieDetail);
         detailLayout.setVisibility(View.VISIBLE);
         tvMovieTitle.setText(movieDetail.getTitle());
         tvMovieTitle.setSelected(true);
@@ -145,7 +213,15 @@ public class DetailFragment extends DaggerFragment implements View.OnClickListen
         tvQuote = view.findViewById(R.id.tvQuoteValue);
         castRecyclerView = view.findViewById(R.id.rvCast);
         detailLayout = view.findViewById(R.id.clDetail);
+        tvDescriptionTitle = view.findViewById(R.id.tvDescriptionTitle);
         ivFavorite = view.findViewById(R.id.ivFavorite);
+        tvCastTitle = view.findViewById(R.id.tvCastTitle);
+        tvTaglineTitle = view.findViewById(R.id.tvTaglineTitle);
+        progressBar = view.findViewById(R.id.progress_bar);
+        noInternetIcon = view.findViewById(R.id.no_internet_cloud_icon);
+        nestedScrollView = view.findViewById(R.id.nestedDetail);
+
+
 
         ivFavorite.setOnClickListener(this);
     }
@@ -159,6 +235,39 @@ public class DetailFragment extends DaggerFragment implements View.OnClickListen
     public void onClick(View view) {
         if(view.getId()==R.id.ivFavorite) {
             detailViewModel.updateFavourite(movieId);
+        }
+    }
+
+    private void updateLayoutForMovieResult(int visible) {
+        Log.d(TAG ,"xlr8: updateLayoutForMovieResult called, visible: "+(visible==View.VISIBLE));
+        tvGenre.setVisibility(visible);
+        tvDuration.setVisibility(visible);
+        tvDescriptionTitle.setVisibility(visible);
+        tvDescription.setVisibility(visible);
+        tvCastTitle.setVisibility(visible);
+        castRecyclerView.setVisibility(visible);
+        tvTaglineTitle.setVisibility(visible);
+        tvQuote.setVisibility(visible);
+        
+        if(visible==View.INVISIBLE) {
+            noInternetIcon.setVisibility(View.VISIBLE);
+        } else {
+            noInternetIcon.setVisibility(View.INVISIBLE);
+        }
+    }
+    
+    private void showProgressBar(boolean show) {
+        if(show)
+            progressBar.setVisibility(View.VISIBLE);
+        else
+            progressBar.setVisibility(View.GONE);
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        if(snackbar!=null) {
+            snackbar.dismiss();
         }
     }
 }
