@@ -5,6 +5,10 @@ This is a simple app which fetches movie data using [The Movie DB APIs](https://
 
 <br />
 
+ | Movies List                         | Movie Detail                        | Favourites                          |
+ |-------------------------------------|-------------------------------------|-------------------------------------|
+ |<img src="list.jpg" width="250">     | <img src="detail.jpg" width="250">  | <img src="favourites.jpg" width="250">  | 
+
 ## Features -
 
 1. Beautiful UI/UX
