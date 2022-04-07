@@ -27,3 +27,11 @@ This is a simple app which fetches movie data using [The Movie DB APIs](https://
 5. Glide
 6. Lottie Animation
 7. Room DB
+
+<br />
+
+## Features coming soon -
+
+1. Pagination - view multiple pages
+2. Multiple types of movie support
+3. See trailer of movies
