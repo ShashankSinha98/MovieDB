@@ -1,8 +1,10 @@
 package com.shashank.moviedb.ui.detail;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -41,7 +43,7 @@ import dagger.android.support.DaggerFragment;
 public class DetailFragment extends DaggerFragment implements View.OnClickListener {
 
     private static final String TAG = "DetailFragment";
-    private AppCompatImageView ivBackdrop, ivPoster, ivFavorite, noInternetIcon, shareIcon;
+    private AppCompatImageView ivBackdrop, ivPoster, ivFavorite, noInternetIcon, shareIcon, ivTrailer;
     private ProgressBar progressBar;
     private TextView tvMovieTitle, tvVoteAverage, tvDuration, tvGenre, tvDescription, tvQuote, tvDescriptionTitle, tvCastTitle, tvTaglineTitle;
     private RecyclerView castRecyclerView;
@@ -223,9 +225,11 @@ public class DetailFragment extends DaggerFragment implements View.OnClickListen
         noInternetIcon = view.findViewById(R.id.no_internet_cloud_icon);
         nestedScrollView = view.findViewById(R.id.nestedDetail);
         shareIcon = view.findViewById(R.id.ivShareIcon);
+        ivTrailer = view.findViewById(R.id.ivTrailerIcon);
 
         shareIcon.setOnClickListener(this);
         ivFavorite.setOnClickListener(this);
+        ivTrailer.setOnClickListener(this);
     }
 
     private void initUI() {
@@ -244,7 +248,22 @@ public class DetailFragment extends DaggerFragment implements View.OnClickListen
             case R.id.ivShareIcon:
                 shareMovieDeepLink(movieId);
                 break;
+
+            case R.id.ivTrailerIcon:
+                searchMovieTrailer(tvMovieTitle);
+                break;
         }
+    }
+
+    private void searchMovieTrailer(TextView tvMovieTitle) {
+        String movieTitle = null;
+        if(tvMovieTitle!=null) {
+            movieTitle = tvMovieTitle.getText().toString();
+        }
+
+        if(movieTitle==null || TextUtils.isEmpty(movieTitle)) return;
+
+        startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(Constants.YOUTUBE_MOVIE_TRAILER_SEARCH+movieTitle+"+trailer")));
     }
 
     private void shareMovieDeepLink(Long movieId) {

@@ -10,7 +10,7 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/clDetail"
-        android:visibility="visible"
+        android:visibility="gone"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
@@ -52,6 +52,8 @@
                 android:scaleType="centerCrop"
                 tools:src="@drawable/dummy_backdrop"/>
 
+
+
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -79,6 +81,17 @@
                     android:background="@drawable/shape_circle"
                     android:layout_marginRight="16dp"
                     android:src="@drawable/ic_baseline_share_24"
+                    />
+
+                <androidx.appcompat.widget.AppCompatImageView
+                    android:id="@+id/ivTrailerIcon"
+                    android:layout_width="34dp"
+                    android:layout_height="34dp"
+                    android:layout_gravity="end|top"
+                    android:layout_marginTop="16dp"
+                    android:background="@drawable/shape_circle"
+                    android:layout_marginRight="16dp"
+                    android:src="@drawable/youtube"
                     />
 
             </LinearLayout>
