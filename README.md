@@ -35,3 +35,9 @@ This is a simple app which fetches movie data using [The Movie DB APIs](https://
 1. Pagination - view multiple pages
 2. Multiple types of movie support
 3. See trailer of movies
+4. Filter/Sort movies
+5. Search Movies
+6. Add personal comment/rating to movie, create new playlist and save them in it
+
+<br />
+Will be available on Playstore soon :)
