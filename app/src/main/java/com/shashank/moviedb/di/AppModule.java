@@ -12,8 +12,8 @@ import com.shashank.moviedb.common.NetworkHelper;
 import com.shashank.moviedb.data.local.MovieDao;
 import com.shashank.moviedb.data.local.MovieDatabase;
 import com.shashank.moviedb.data.remote.MovieApi;
-import com.shashank.moviedb.data.remote.MovieRepository;
-import com.shashank.moviedb.data.remote.MovieRepositoryImpl;
+import com.shashank.moviedb.data.MovieRepository;
+import com.shashank.moviedb.data.MovieRepositoryImpl;
 import com.shashank.moviedb.util.Constants;
 
 import java.util.concurrent.TimeUnit;

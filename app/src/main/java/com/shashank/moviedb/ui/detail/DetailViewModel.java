@@ -9,7 +9,7 @@ import androidx.lifecycle.ViewModel;
 import com.shashank.moviedb.data.Resource;
 import com.shashank.moviedb.data.ResourceCallback;
 import com.shashank.moviedb.data.Status;
-import com.shashank.moviedb.data.remote.MovieRepository;
+import com.shashank.moviedb.data.MovieRepository;
 import com.shashank.moviedb.model.MovieDetail;
 import com.shashank.moviedb.model.MovieResult;
 

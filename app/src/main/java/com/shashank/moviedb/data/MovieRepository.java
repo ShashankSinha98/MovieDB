@@ -1,4 +1,4 @@
-package com.shashank.moviedb.data.remote;
+package com.shashank.moviedb.data;
 
 import com.shashank.moviedb.data.ResourceCallback;
 import com.shashank.moviedb.data.Resource;

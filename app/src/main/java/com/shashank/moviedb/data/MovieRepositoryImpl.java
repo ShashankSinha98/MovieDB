@@ -1,4 +1,4 @@
-package com.shashank.moviedb.data.remote;
+package com.shashank.moviedb.data;
 
 import static com.shashank.moviedb.util.Constants.*;
 import static com.shashank.moviedb.util.Constants.TRENDING_TIME_WINDOW;
@@ -7,10 +7,9 @@ import android.util.Log;
 
 import androidx.annotation.NonNull;
 
-import com.shashank.moviedb.data.ResourceCallback;
-import com.shashank.moviedb.data.Resource;
 import com.shashank.moviedb.data.local.MovieDao;
 import com.shashank.moviedb.data.local.entity.FavouriteMovieIdsEntity;
+import com.shashank.moviedb.data.remote.MovieApi;
 import com.shashank.moviedb.model.MovieDetail;
 import com.shashank.moviedb.model.MovieResponse;
 import com.shashank.moviedb.model.MovieResult;

@@ -1,16 +1,12 @@
 package com.shashank.moviedb.ui.nowplaying;
 
-import android.util.Log;
-
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.shashank.moviedb.data.Resource;
 import com.shashank.moviedb.data.ResourceCallback;
-import com.shashank.moviedb.data.Status;
-import com.shashank.moviedb.data.remote.MovieRepository;
-import com.shashank.moviedb.model.MovieResponse;
+import com.shashank.moviedb.data.MovieRepository;
 import com.shashank.moviedb.model.MovieResult;
 import com.shashank.moviedb.util.Constants;
 

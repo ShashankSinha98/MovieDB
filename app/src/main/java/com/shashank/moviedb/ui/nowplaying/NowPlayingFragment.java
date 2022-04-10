@@ -21,7 +21,7 @@ import com.shashank.moviedb.common.MovieOnClickListener;
 import com.shashank.moviedb.common.ViewModelProviderFactory;
 import com.shashank.moviedb.data.Resource;
 import com.shashank.moviedb.data.Status;
-import com.shashank.moviedb.data.remote.MovieRepository;
+import com.shashank.moviedb.data.MovieRepository;
 import com.shashank.moviedb.model.MovieResult;
 import com.shashank.moviedb.ui.trending.adapter.MovieRecyclerAdapter;
 import com.shashank.moviedb.view.customview.EmptyView;
