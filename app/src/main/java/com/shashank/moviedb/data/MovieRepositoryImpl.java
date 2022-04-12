@@ -48,6 +48,7 @@ public class MovieRepositoryImpl implements MovieRepository {
     }
 
 
+    /**   NOW PLAYING MOVIES  **/
     @Override
     public void fetchNowPlayingMovies(ResourceCallback resourceCallback) {
         resourceCallback.onResponse(Resource.loading("Loading Now Playing Movies"));
@@ -86,14 +87,19 @@ public class MovieRepositoryImpl implements MovieRepository {
     }
 
 
+    /**   TRENDING MOVIES  **/
     @Override
     public void fetchTrendingMovies(ResourceCallback resourceCallback) {
+
+        // 1. Set current request status as Loading...
         resourceCallback.onResponse(Resource.loading("Loading Trending Movies"));
 
+
+        // 2. Fetch data from API
         movieApi.fetchTrendingMovie(TRENDING_TIME_WINDOW, QueryParams.PARAMS_TRENDING_MOVIE_API)
                 .subscribeOn(Schedulers.io())
                 //.observeOn(AndroidSchedulers.mainThread())
-                .delay(DUMMY_NETWORK_DELAY, TimeUnit.MILLISECONDS)
+                .delay(DUMMY_NETWORK_DELAY, TimeUnit.MILLISECONDS) // TODO: custom delay added - remove from production
                 .subscribe(new Observer<MovieResponse>() {
                     @Override
                     public void onSubscribe(@NonNull Disposable d) {
